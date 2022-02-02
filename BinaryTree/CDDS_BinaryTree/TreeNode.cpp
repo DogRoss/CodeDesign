@@ -4,11 +4,35 @@
 
 TreeNode::TreeNode(int value) : m_value(value), m_left(nullptr), m_right(nullptr)
 {
+	
 }
 
 
 TreeNode::~TreeNode()
 {
+}
+
+void TreeNode::SetNode(TreeNode* node)
+{
+	m_value = node->GetData();
+
+	if (node->HasLeft())
+	{
+		m_left = node->GetLeft();
+	}
+	else 
+	{
+		m_left = nullptr;
+	}
+	if (node->HasRight())
+	{
+		m_right = node->GetRight();
+	}
+	else
+	{
+		m_right = nullptr;
+	}
+	
 }
 
 void TreeNode::Draw(int x, int y, bool selected)
