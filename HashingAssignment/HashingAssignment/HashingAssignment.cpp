@@ -33,6 +33,7 @@ typedef struct HashTable HashTable;
 struct HashTable {
 	//Contains array of pointers to items
 	Ht_item** items;
+	LinkedList** overflow_buckets; //TODO: desc
 	int size;
 	int count;
 };
@@ -51,15 +52,68 @@ LinkedList* allocate_list() { //TODO: proper comments
 	return list;
 }
 
-LinkedList linkedlist_insert(LinkedList* list, Ht_item* item) {//TODO: proper comments
-	
+LinkedList* linkedlist_insert(LinkedList* list, Ht_item* item) {//TODO: proper comments
+	//Inserts item onto Linked List
+	if (!list) {				//TODO: desc
+		LinkedList* head = allocate_list();
+		head->item = item;
+		head->next = NULL;
+		list = head;
+		return list;
+	}
+	else if (list->next == NULL) {		//TODO: desc
+		LinkedList* node = allocate_list();
+		node->item = item;
+		node->next = NULL;
+		list->next = node;
+		return list;
+	}
+
+	LinkedList* temp = list;
+	while (temp->next->next) {	//TODO: desc
+		temp = temp->next;
+	}
+
+	LinkedList* node = allocate_list();
+	node->item = item;
+	node->next = NULL;
+	temp->next = node;
+
+	return list;
 }
 
-Ht_item linkedlist_remove(LinkedList* list) {//TODO: proper comments
-
+Ht_item* linkedlist_remove(LinkedList* list) {	//TODO: proper comments
+	// Removes the head from the linked list
+	// and returns the item of the popped element
+	if (!list) {
+		return NULL;
+	}
+	if (!list->next) {
+		return NULL;
+	}
+	LinkedList* node = list->next;
+	LinkedList* temp = list;
+	temp->next = NULL;
+	list = node;
+	Ht_item* it = NULL;
+	memcpy(temp->item, it, sizeof(Ht_item));
+	free(temp->item->key);
+	free(temp->item->value);
+	free(temp->item);
+	free(temp);
+	return it;
 }
 
-void free_linkedlist(LinkedList* list) {
+void free_linkedlist(LinkedList* list) { //TODO: proper comments
+	LinkedList* temp = list;
+	while (list) {
+		temp = list;
+		list= list->next;
+		free(temp->item->key);
+			free(temp->item->value);
+		free(temp->item);
+		free(temp);
+	}
 
 }
 
@@ -79,6 +133,31 @@ Ht_item* create_item(const char* key, const char* value) {
 	return item;
 }
 
+void free_item(Ht_item* item) {
+	// Frees an item
+	free(item->key);
+	free(item->value);
+	free(item);
+}
+
+LinkedList** create_overflow_buckets(HashTable* table) { //TODO: proper comments
+	//Create the overflow buckets; an array of linkedlists
+	LinkedList** buckets = (LinkedList**)calloc(table->size, sizeof(LinkedList*));
+	for (int i = 0; i < table->size; i++) {
+		buckets[i] = NULL;
+	}
+	return buckets;
+}
+
+void free_overflow_buckets(HashTable* table) { //TODO: proper comments
+	// Free all the overflow bucket lists
+	LinkedList** buckets = table->overflow_buckets;
+	for (int i = 0; i < table->size; i++) {
+		free_linkedlist(buckets[i]);
+	}
+	free(buckets);
+}
+
 HashTable* create_table(int size) {
 	// Creates a new HashTable
 	HashTable* table = (HashTable*)malloc(sizeof(HashTable));	// allocates memory based on size of table the user wants
@@ -88,15 +167,9 @@ HashTable* create_table(int size) {
 	for (int i = 0; i < table->size; i++) {
 		table->items[i] = NULL; // 
 	}
+	table->overflow_buckets = create_overflow_buckets(table);
 
 	return table;
-}
-
-void free_item(Ht_item* item) {
-	// Frees an item
-	free(item->key);
-	free(item->value);
-	free(item);
 }
 
 void free_table(HashTable* table) {
@@ -108,6 +181,7 @@ void free_table(HashTable* table) {
 		}
 	}
 
+	free_overflow_buckets(table); //free overflow bucket linked list and its items
 	free(table->items);
 	free(table);
 }
