@@ -186,7 +186,7 @@ void free_table(HashTable* table) {
 	free(table);
 }
 
-void handle_collision(HashTable* table, Ht_item* item) {//TODO: handle collision
+void handle_collision(HashTable* table, Ht_item* item) {//TODO: (IMPORTANT) handle collision
 }
 void ht_insert(HashTable* table, const char* key, const char* value) {
 	Ht_item* item = create_item(key, value); //sets pointer to created item
