@@ -27,6 +27,14 @@ struct Ht_item {
 	char* value;
 };
 
+typedef struct LinkedList LinkedList;
+
+// Definition
+struct LinkedList {//TODO: proper comments
+	Ht_item* item;
+	LinkedList* next;
+};
+
 typedef struct HashTable HashTable;
 
 //	Definitions
@@ -38,13 +46,7 @@ struct HashTable {
 	int count;
 };
 
-typedef struct LinkedList LinkedList;
 
-// Definition
-struct LinkedList {//TODO: proper comments
-	Ht_item* item;
-	LinkedList* next;
-};
 
 LinkedList* allocate_list() { //TODO: proper comments
 	// Allocates memory for a Linkedlist pointer
@@ -187,6 +189,10 @@ void free_table(HashTable* table) {
 }
 
 void handle_collision(HashTable* table, Ht_item* item) {//TODO: (IMPORTANT) handle collision
+
+
+
+
 }
 void ht_insert(HashTable* table, const char* key, const char* value) {
 	Ht_item* item = create_item(key, value); //sets pointer to created item
@@ -234,6 +240,69 @@ char* ht_search(HashTable* table, const char* key) { //searched key in hashtable
 	return NULL;
 }
 
+void ht_delete(HashTable* table, const char* key) {
+	//Deletes an item from table
+	int index = myHash(key);
+	Ht_item* item = table->items[index];
+	LinkedList* head = table->overflow_buckets[index];
+
+	if (item == NULL) {
+		//Does not exist. Return
+		return;
+	}
+	else {
+		if (head == NULL && strcmp(item->key, key) == 0) {
+			//No collision chain, remove the item and set table index to NULL
+			table->items[index] = NULL;
+			free_item(item);
+			table->count--;
+			return;
+		}
+		else if (head != NULL) {
+			//Collision chain exists
+			if (strcmp(item->key, key) == 0) {
+				//Remove this item and set the head of list as new item
+				free_item(item);
+				LinkedList* node = head;
+				head = head->next;
+				node->next = NULL;
+				table->items[index] = create_item(node->item->key, node->item->value);
+				free_linkedlist(node);
+				table->overflow_buckets[index] = head;
+				return;
+			}
+
+			LinkedList* curr = head;
+			LinkedList* prev = NULL;
+
+			while (curr) {
+				if (strcmp(curr->item->key, key) == 0) {
+					if (prev == NULL) {
+						//first element in chain
+						free_linkedlist(head);
+						table->overflow_buckets[index] = NULL;
+						return; 
+					}
+					else {
+						//this is somewhere in chain
+						prev->next = curr->next;
+						curr->next = NULL;
+						free_linkedlist(curr);
+						table->overflow_buckets[index] = head;
+						return;
+					}
+				}
+
+				curr = curr->next;
+				prev = curr;
+
+			}
+
+		}
+	}
+
+}
+
 void print_search(HashTable* table, const char* key) { //TODO: proper comments
 	char* val;
 	if ((val = ht_search(table, key)) == NULL) {
@@ -255,14 +324,24 @@ void print_table(HashTable* table) { //TODO: proper comments
 	printf("---------------------\n\n");
 }
 
+
 int main() { //TODO: proper comments
 	HashTable* ht = create_table(CAPACITY);
 	ht_insert(ht, "1", "First address");
 	ht_insert(ht, "2", "Second address");
+	ht_insert(ht, "Hel", "Third address");
+	ht_insert(ht, "Cau", "Fourthh address");
 	print_search(ht, "1");
 	print_search(ht, "2");
 	print_search(ht, "3");
+	print_search(ht, "Hel");
+	print_search(ht, "Cau"); //Collision happens
+	print_table(ht);
+	ht_delete(ht, "1");
+	ht_delete(ht, "Cau");
+	print_table(ht);
 	free_table(ht);
+
 	return 0;
 }
 
