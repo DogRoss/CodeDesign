@@ -13,7 +13,8 @@ public:
 	TreeNode* GetLeft() { return m_left; }
 	TreeNode* GetRight() { return m_right; }
 
-	void SetData(int value) {  }//TODO: Finish SetData Function
+	
+	void SetData(int value) { m_value = value; }//TODO: Finish SetData Function
 	void SetLeft(TreeNode* node) { m_left = node; }
 	void SetRight(TreeNode* node) { m_right = node; }
 

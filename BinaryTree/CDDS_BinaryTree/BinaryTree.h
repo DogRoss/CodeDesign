@@ -6,6 +6,8 @@ Date: 17/4/2015
 #ifndef _BINARYTREE_H_
 #define _BINARYTREE_H_
 
+#include "TreeNode.h"
+
 class TreeNode;
 
 class BinaryTree

@@ -4,7 +4,7 @@ Description: A simple binary search tree
 Date: 17/4/2015
 ----------------------------------------*/
 #include "BinaryTree.h"
-#include "TreeNode.h"
+//#include "TreeNode.h"
 #include "raylib.h"
 #include <iostream>
 #include <cstdlib>
@@ -18,7 +18,7 @@ BinaryTree::BinaryTree()
 
 BinaryTree::~BinaryTree()
 {
-	while(m_pRoot)
+	while(m_pRoot != NULL)
 	{
 		Remove(m_pRoot->GetData());
 	}
@@ -44,9 +44,9 @@ void BinaryTree::Insert(int a_nValue)
 	else if(m_pRoot != nullptr)
 	{//TODO: left right tree implementation
 
-		TreeNode currentNode = TreeNode(m_pRoot->GetData()); //sets currently selected node to root
-		currentNode.SetLeft(m_pRoot->GetLeft());
-		currentNode.SetRight(m_pRoot->GetRight());
+		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
+		//currentNode.SetLeft(m_pRoot->GetLeft());
+		//currentNode.SetRight(m_pRoot->GetRight());
 
 		TreeNode* valueNode = new TreeNode(a_nValue);
 
@@ -55,61 +55,59 @@ void BinaryTree::Insert(int a_nValue)
 
 		while (!isNull)
 		{
-
-			if (a_nValue > currentNode.GetData()) //if value is greater than current node, right side node
+			std::cout << "entered while state" << std::endl;
+			if (a_nValue > currentNode->GetData()) //if value is greater than current node, right side node
 			{
-				//TODO: debug console
-				std::cout << "RightNodeCheck Successful, Value is Higher than current data" << std::endl;
+				std::cout << "entered first conditional" << std::endl;
 
-				if (!currentNode.HasRight())
+				if (!currentNode->HasRight())
 				{
 
 					//TODO: debug console
-					std::cout << "entered check" << std::endl;
+					std::cout << "entered right check first conditional, break here (Success)" << std::endl;
 
-					currentNode.SetRight(valueNode); //set tree node here
+
+
+					currentNode->SetRight(valueNode); //set tree node here
+					break;
 					
 				}
 				else {
-					currentNode = TreeNode(currentNode.GetRight()->GetData()); //sets currently selected node to root
-					currentNode.SetLeft(currentNode.GetLeft());
-					currentNode.SetRight(currentNode.GetRight());
+					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
+					currentNode = currentNode->GetRight(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
 				}
 				
+				
 			}
-			else if (a_nValue < currentNode.GetData()) //if value is less than current node, left side node
+			else if (a_nValue < currentNode->GetData()) //if value is less than current node, left side node
 			{
-				//TODO: debug console
-				std::cout << "LeftNodeCheck Successful, Value is lower than current data" << std::endl;
+				std::cout << "entered second conditional" << std::endl;
 
-				if (currentNode.HasLeft())
+				if (!currentNode->HasLeft())
 				{
-					currentNode = TreeNode(currentNode.GetLeft()->GetData()); //sets currently selected node to root
-					currentNode.SetLeft(currentNode.GetLeft());
-					currentNode.SetRight(currentNode.GetRight());
+					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
+					currentNode->SetLeft(valueNode); //set tree node here
+					break;
+				}
+				else {
+					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
+					currentNode = currentNode->GetLeft(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
 				}
 				
 			}
-			else if (a_nValue == currentNode.GetData()) //if value is same as node, exit
+			else if (a_nValue == currentNode->GetData()) //if value is same as node, exit
 			{
-				std::cout << "Value already exists within tree" << std::endl;
+				std::cout << "entered third conditional, value already exists" << std::endl;
 				break;
 			}
 
 		}
 
-		////TODO: Finish left right node checks
-		//if (m_pRoot->GetLeft() == nullptr) //if the nodes left side isnt taken
-		//{
-		//	m_pRoot->SetLeft(new TreeNode(a_nValue));
-		//
-		//}
-		//else if (m_pRoot->GetRight() == nullptr)
-		//{
-		//	m_pRoot->SetRight(new TreeNode(a_nValue));
-		//
-		//}
-
+		
 	}
 }
 
@@ -118,19 +116,228 @@ TreeNode* BinaryTree::Find(int a_nValue)
 	TreeNode* pCurrent = nullptr;
 	TreeNode* pParent = nullptr;
 
-	return FindNode(a_nValue, pCurrent, pParent) ? pCurrent: nullptr;
+	return FindNode(a_nValue, pCurrent, pParent) ? pCurrent: nullptr; 
 }
 
 bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent)
 {
+	// if tree empty, value is inserted at root
+	if (m_pRoot == nullptr)
+	{
+		std::cout << "no numbers present on tree" << std::endl;
+	}
+	else if (m_pRoot != nullptr)
+	{//TODO: left right tree implementation
 
+		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
+
+		//TODO:temp variables
+		bool isNull = false;
+
+		while (!isNull)
+		{
+			std::cout << "entered while state" << std::endl;
+			if(a_nSearchValue == currentNode->GetData()) 
+			{
+				ppOutNode = currentNode;
+				break;
+			}
+			else if (a_nSearchValue == currentNode->GetRight()->GetData()) //if value is same as node, delete node
+			{
+				std::cout << "entered third conditional, delete the value" << std::endl;
+
+				ppOutParent = currentNode;
+				ppOutNode = ppOutParent->GetRight();
+				
+				break;
+			}
+			else if (a_nSearchValue == currentNode->GetLeft()->GetData()) //if value is same as node, delete node
+			{
+				std::cout << "entered third conditional, delete the value" << std::endl;
+
+
+				ppOutParent = currentNode;
+				ppOutNode = ppOutParent->GetLeft();
+
+				break;
+			}
+			else if (a_nSearchValue > currentNode->GetData()) //if value is greater than current node, right side node
+			{
+				std::cout << "entered first conditional" << std::endl;
+
+				if (!currentNode->HasRight())
+				{
+
+					//TODO: debug console
+					std::cout << "error: number isnt present in tree" << std::endl;
+
+					break;
+
+				}
+				else {
+					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
+					currentNode = currentNode->GetRight(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
+				}
+
+
+			}
+			else if (a_nSearchValue < currentNode->GetData()) //if value is less than current node, left side node
+			{
+				std::cout << "entered second conditional" << std::endl;
+
+				if (!currentNode->HasLeft())
+				{
+					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
+					break;
+				}
+				else {
+					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
+					currentNode = currentNode->GetLeft(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
+				}
+
+			}
+			
+
+		}
+
+
+	}
 
 	return false;
 }
 
 void BinaryTree::Remove(int a_nValue)
 {
+	// if tree empty, value is inserted at root
+	if (m_pRoot == nullptr)
+	{
+		std::cout << "no numbers present on tree" << std::endl;
+	}
+	else if (m_pRoot != nullptr)
+	{//TODO: left right tree implementation
 
+		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
+
+		//TODO:temp variables
+		bool isNull = false;
+
+		std::cout << "before while called" << std::endl;
+
+		while (!isNull)
+		{
+			std::cout << "entered while state" << std::endl;
+			if (a_nValue > currentNode->GetData()) //if value is greater than current node, right side node
+			{
+				std::cout << "entered first conditional" << std::endl;
+
+				if (!currentNode->HasRight())
+				{
+
+					//TODO: debug console
+					std::cout << "error: number isnt present in tree" << std::endl;
+
+					return;
+
+				}
+				else {
+					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
+					currentNode = currentNode->GetRight(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
+				}
+
+
+			}
+			else if (a_nValue < currentNode->GetData()) //if value is less than current node, left side node
+			{
+				std::cout << "entered second conditional" << std::endl;
+
+				if (!currentNode->HasLeft())
+				{
+					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
+					return;
+				}
+				else {
+					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
+					currentNode = currentNode->GetLeft(); //sets currently selected node to root
+					currentNode->SetLeft(currentNode->GetLeft());
+					currentNode->SetRight(currentNode->GetRight());
+				}
+
+			}
+
+
+			else if (a_nValue == currentNode->GetData()) //if value is same as node, delete node
+			{
+				std::cout << "entered third conditional, begin deletion process" << std::endl;
+
+
+				/*//if the value on the right is greater than the left, it gains priority
+				if (currentNode->GetRight()->GetData() > currentNode->GetLeft()->GetData()) {
+					//right side priority
+					currentNode = currentNode->GetRight();
+				}
+				else {
+					//left side priority
+					currentNode = currentNode->GetLeft();
+				}*/
+
+				TreeNode* temp = currentNode;
+
+				if (currentNode->HasLeft()) {
+					currentNode = currentNode->GetLeft(); //sets the left side node to the removed node
+					//if multiple right side nodes you might run into a problem 
+
+					std::cout << "left node set, iterate through left-right nodes" << std::endl;
+					
+					bool shouldStop = false;
+					while (!shouldStop) {
+						
+						
+						if (currentNode->GetRight()) { //TODO: get this to not break and throw a read access violation
+							currentNode = currentNode->GetRight();
+						}
+						else if (currentNode->GetRight() == NULL) {
+							currentNode->SetRight(temp->GetRight());							
+							isNull = true;
+							delete temp;
+							return;
+						}
+					}
+
+				}
+				else if(currentNode->HasRight()) { //if no left side
+
+					std::cout << "right node being set" << std::endl;
+					currentNode = currentNode->GetRight();
+					isNull = true;
+					delete temp;
+					return;
+				}
+				else {
+					std::cout << "before break" << std::endl;
+					isNull = true;
+					delete temp;
+					return;
+				}
+				
+			}
+
+			if (isNull == true) {
+				std::cout << "break statement active" << std::endl;
+
+				break;
+
+			}
+
+		}
+
+
+	}
 }
 
 void BinaryTree::PrintOrdered()
