@@ -2,6 +2,7 @@
 #include <functional>
 #include <string>
 #include <string.h>
+#include <iostream>
 
 //TODO: ask rob how this works and why id use it
 #define CAPACITY 50000 //size of hash table
@@ -342,7 +343,16 @@ int main() { //TODO: proper comments
 	print_table(ht);
 	free_table(ht);
 
-	return 0;
+	std::cout << "type 'esc' to exit" << std::endl;
+	std::string result;
+	std::cin >> result;
+	if (result == "esc") {
+		return 0;
+	}
+	else {
+		return 0;
+	}
+	
 }
 
 

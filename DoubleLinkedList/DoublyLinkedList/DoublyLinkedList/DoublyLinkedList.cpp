@@ -276,8 +276,9 @@ int main() //TODO user interface
     traverse();
 
 
-
-    std::cout << "Hello World!\n";
+    std::cout << "type 'esc' to exit" << std::endl;
+    std::string result;
+    std::cin >> result;
     return 0;
 }
 
