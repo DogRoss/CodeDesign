@@ -62,7 +62,7 @@ public:
         
         for (int i = 0; i < sizeof(nodeThings); i++) //copies data to new array
         {
-            storageNodeArray[i] = nodeThings[i]
+            storageNodeArray[i] = nodeThings[i];
         }
 
         nodeThings.memSet;
