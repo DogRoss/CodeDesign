@@ -18,7 +18,7 @@ node* temp = NULL;
 node* tail = NULL;
 
 //adds node to doubly linked list
-void addnote(int k) {                                   //TODO: you can do this is c#
+void addnode(int k) {                                   //TODO: you can do this is c#
     //allocates memory for node pointer
     node* ptr = (node*)malloc(sizeof(node));
 
@@ -43,13 +43,242 @@ void addnote(int k) {                                   //TODO: you can do this 
         tail = temp;
     }
 
-    i++
+    //Increment for num of nodes in linked list
+    i++;
+};
+
+void traverse() {
+    //node points towards head node
+    node* ptr = head;
+
+    //while pointer isnt null, traverse and print the mode
+    while (ptr != NULL) {
+
+        //Print key of the node
+        printf("%d ", ptr->key);
+        ptr = ptr->next;
+    }
+
+    printf("\n");
 }
 
 
-int main()
+//function to insert a node at the beginning of the linked list
+void insertatbegin(int k) {
+    //allocates memory to the node ptr
+    node* ptr = (node*)malloc(sizeof(node));
+
+    //assign key to value k
+    ptr->key = k;
+
+    // Next and prev pointer to NULL
+    ptr->next = NULL;
+    ptr->prev = NULL;
+
+    //if head is NULL, then head and tail are the node
+    if (head == NULL) {
+        first = ptr;
+        first = head;
+        tail = head;
+    }
+    else { //if not, insert at the beginning and update head node to be current
+        temp = ptr;
+        temp->next = head;
+        head->prev = temp;
+        head = temp;
+    }
+    i++;
+}
+
+//Function to insert node at end
+void insertatend(int k) {
+    //allocate memory to node pointer
+    node* ptr = (node*)malloc(sizeof(node));
+
+    //assign key to value k
+    ptr->key = k;
+
+    //Next and prev pointer to NULL
+    ptr->next = NULL;
+    ptr->prev = NULL;
+
+    //If head is Null
+    if (head == NULL) {
+        first = ptr;
+        first = head;
+        tail = head;
+    }
+    else { //if not, insert at the end
+        temp = ptr;
+        temp->prev = tail;
+        tail->next = temp;
+        tail = temp;
+    }
+    i++;
+}
+
+//insert function to insert at any position in list
+void insertatpos(int k, int pos) { //TODO: clean comments, and names of variables
+
+    //for invalid position
+    if (pos < 1 || pos > i + 1) {
+        std::cout << "Please enter a valid position" << std::endl;
+    }
+    else if (pos == 1) { //if at beggining of list, then insert at beginning
+        insertatbegin(k);
+    }
+    else if (pos == i + 1) { // if at end of list, insert at end
+        insertatend(k);
+    }
+    else { //if not at end or beginning, traverse and insert at designated position
+        node* src = head;
+
+        //Move head pointer to pos
+        while (pos--) {
+            src = src->next;
+        }
+
+        //Allocate memory to new node
+        node** da, ** ba;
+        node* ptr = (node*)malloc(sizeof(node));
+        ptr->next = NULL;
+        ptr->prev = NULL;
+        ptr->key = k;
+
+        //change prev/next ptr of nodes inserted with prev/next node
+        ba = &src;
+        da = &(src->prev);
+        ptr->next = (*ba);
+        ptr->prev = (*da);
+        (*da)->next = ptr;
+        (*ba)->prev = ptr;
+        i++;
+    }
+}
+
+//function to delete node at the beginning of the list
+void delatbegin() {
+    //move head to next and decrease length by one
+    head = head->next;
+    i--;
+}
+
+//Function to delete node at end of list
+void delatend() {
+    //move tail to prev, and decrease lenght by 1
+    tail = tail->prev;
+    tail->next = NULL;
+    i--;
+}
+
+//function to delete node at specific position
+void delatpos(int pos) {
+
+    //invalid pos
+    if (pos < 1 || pos > i + 1) {
+        std::cout << "please enter a valid position" << std::endl;
+    }
+
+    //if pos is one, del at begin
+    else if (pos == 1) {
+        delatbegin();
+    }
+
+    //if pos is at the end, del at end
+    else if (pos == i) {
+        delatend();
+    }
+
+    //traverse to pos and del
+    else {
+        //src node to find which node to be deleted
+        node* src = head;
+        pos--;
+
+        //traverse til node pos
+        while (pos--) {
+            src = src->next;
+        }
+
+        //prev and after node of src node
+        node **pre, **aft;
+        pre = &(src->prev);
+        aft = &(src->next);
+
+        //change the next and prev ptr of pre and aft node
+        (*pre)->next = (*aft);
+        (*aft)->prev = (*pre);
+
+        //decrease length of list
+        i--;
+    }
+
+}
+
+int main() //TODO user interface
 {
+
+    // Adding node to the linked List
+    addnode(2);
+    addnode(4);
+    addnode(9);
+    addnode(1);
+    addnode(21);
+    addnode(22);
+
+    // To print the linked List
+    printf("Linked List: ");
+    traverse();
+
+    printf("\n");
+
+    // To insert node at the beginning
+    insertatbegin(1);
+    printf("Linked List after"
+        " inserting 1 "
+        "at beginning: ");
+    traverse();
+
+    // To insert at the end
+    insertatend(0);
+    printf("Linked List after "
+        "inserting 0 at end: ");
+    traverse();
+
+    // To insert Node with
+    // value 44 after 3rd Node
+    insertatpos(44, 3);
+    printf("Linked List after "
+        "inserting 44 "
+        "after 3rd Node: ");
+    traverse();
+
+    printf("\n");
+
+    // To delete node at the beginning
+    delatbegin();
+    printf("Linked List after "
+        "deleting node "
+        "at beginning: ");
+    traverse();
+
+    // To delete at the end
+    delatend();
+    printf("Linked List after "
+        "deleting node at end: ");
+    traverse();
+
+    // To delete Node at position 5
+    printf("Linked List after "
+        "deleting node "
+        "at position 5: ");
+    delatpos(5);
+    traverse();
+
+
+
     std::cout << "Hello World!\n";
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
