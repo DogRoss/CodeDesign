@@ -142,66 +142,30 @@ bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& p
 				ppOutNode = currentNode;
 				break;
 			}
-			else if (a_nSearchValue == currentNode->GetRight()->GetData()) //if value is same as node, delete node
-			{
-				std::cout << "entered third conditional, delete the value" << std::endl;
-
-				ppOutParent = currentNode;
-				ppOutNode = ppOutParent->GetRight();
-				
-				break;
-			}
-			else if (a_nSearchValue == currentNode->GetLeft()->GetData()) //if value is same as node, delete node
-			{
-				std::cout << "entered third conditional, delete the value" << std::endl;
-
-
-				ppOutParent = currentNode;
-				ppOutNode = ppOutParent->GetLeft();
-
-				break;
-			}
-			else if (a_nSearchValue > currentNode->GetData()) //if value is greater than current node, right side node
-			{
-				std::cout << "entered first conditional" << std::endl;
-
-				if (!currentNode->HasRight())
-				{
-
-					//TODO: debug console
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-
-				}
-				else {
-					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
+			else if (a_nSearchValue > currentNode->GetData()) {
+				if (currentNode->HasRight()) {
 					currentNode = currentNode->GetRight(); //sets currently selected node to root
 					currentNode->SetLeft(currentNode->GetLeft());
 					currentNode->SetRight(currentNode->GetRight());
 				}
+				else {
+					std::cout << "error: number isnt present in tree" << std::endl;
 
-
-			}
-			else if (a_nSearchValue < currentNode->GetData()) //if value is less than current node, left side node
-			{
-				std::cout << "entered second conditional" << std::endl;
-
-				if (!currentNode->HasLeft())
-				{
-					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
 					break;
 				}
-				else {
-					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
+			}
+			else if (a_nSearchValue < currentNode->GetData()) {
+				if (currentNode->HasRight()) {
 					currentNode = currentNode->GetLeft(); //sets currently selected node to root
 					currentNode->SetLeft(currentNode->GetLeft());
 					currentNode->SetRight(currentNode->GetRight());
 				}
+				else {
+					std::cout << "error: number isnt present in tree" << std::endl;
 
-			}
-			
-
+					break;
+				}
+			}						
 		}
 
 
