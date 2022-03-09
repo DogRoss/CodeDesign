@@ -24,6 +24,10 @@ BinaryTree::~BinaryTree()
 	}
 }
 
+TreeNode* BinaryTree::GetRoot() {
+	return m_pRoot;
+}
+
 // Return whether the tree is empty
 bool BinaryTree::IsEmpty() const 
 { 
@@ -102,6 +106,7 @@ void BinaryTree::Insert(int a_nValue)
 			else if (a_nValue == currentNode->GetData()) //if value is same as node, exit
 			{
 				std::cout << "entered third conditional, value already exists" << std::endl;
+				currentNode->SetData(a_nValue);
 				break;
 			}
 
@@ -204,7 +209,7 @@ void BinaryTree::Remove(int a_nValue)
 					//TODO: debug console
 					std::cout << "error: number isnt present in tree" << std::endl;
 
-					return;
+					break;
 
 				}
 				else {
@@ -212,6 +217,7 @@ void BinaryTree::Remove(int a_nValue)
 					currentNode = currentNode->GetRight(); //sets currently selected node to root
 					currentNode->SetLeft(currentNode->GetLeft());
 					currentNode->SetRight(currentNode->GetRight());
+
 				}
 
 
@@ -223,7 +229,7 @@ void BinaryTree::Remove(int a_nValue)
 				if (!currentNode->HasLeft())
 				{
 					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
-					return;
+					break;
 				}
 				else {
 					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
@@ -259,44 +265,64 @@ void BinaryTree::Remove(int a_nValue)
 					std::cout << "left node set, iterate through left-right nodes" << std::endl;
 					
 					bool shouldStop = false;
+					int i = 0;
 					while (!shouldStop) {
-						
+						i++;
+						std::cout << "entering while loop, " << i << " loops" << std::endl;
 						
 						if (currentNode->GetRight()) { //TODO: get this to not break and throw a read access violation
 							currentNode = currentNode->GetRight();
 						}
-						else if (currentNode->GetRight() == NULL) {
-							currentNode->SetRight(temp->GetRight());							
-							isNull = true;
-							delete temp;
-							return;
+						else if (currentNode->GetLeft()) {
+							currentNode = currentNode->GetLeft();
 						}
+						else {
+							std::cout << "neither left nor right node exist, breaking... (BinaryTree.cpp, line 278)" << std::endl;
+							break;
+						}
+
+
+						
 					}
 
 				}
 				else if(currentNode->HasRight()) { //if no left side
 
-					std::cout << "right node being set" << std::endl;
-					currentNode = currentNode->GetRight();
-					isNull = true;
-					delete temp;
-					return;
+					currentNode = currentNode->GetRight(); //sets the left side node to the removed node
+					//if multiple right side nodes you might run into a problem 
+
+					std::cout << "left node set, iterate through left-right nodes" << std::endl;
+
+					bool shouldStop = false;
+					int i = 0;
+					while (!shouldStop) {
+						i++;
+						std::cout << "entering while loop, " << i << " loops" << std::endl;
+
+						if (currentNode->GetRight()) { //TODO: get this to not break and throw a read access violation
+							currentNode = currentNode->GetRight();
+						}
+						else if (currentNode->GetLeft()) {
+							currentNode = currentNode->GetLeft();
+						}
+						else {
+							std::cout << "neither left nor right node exist, breaking... (BinaryTree.cpp, line 309)" << std::endl;
+							break;
+						}
+
+
+
+					}
 				}
 				else {
 					std::cout << "before break" << std::endl;
-					isNull = true;
-					delete temp;
-					return;
+					delete currentNode;
+					break;
 				}
 				
 			}
 
-			if (isNull == true) {
-				std::cout << "break statement active" << std::endl;
-
-				break;
-
-			}
+			
 
 		}
 
@@ -333,25 +359,42 @@ void BinaryTree::Draw(TreeNode* selected)
 
 void BinaryTree::Draw(TreeNode* pNode, int x, int y, int horizontalSpacing, TreeNode* selected)
 {
+	TreeNode* current = pNode;
 	
 	horizontalSpacing /= 2;
 
 	if (pNode)
 	{
-		if (pNode->HasLeft())
-		{
+		//if (pNode->HasLeft())
+		//{
+		//	DrawLine(x, y, x - horizontalSpacing, y + 80, RED);
+		//	
+		//	Draw(pNode->GetLeft(), x - horizontalSpacing, y + 80, horizontalSpacing, selected);
+		//}
+		//else if (pNode->HasRight())
+		//{
+		//	DrawLine(x, y, x + horizontalSpacing, y + 80, RED);
+		//
+		//	Draw(pNode->GetRight(), x + horizontalSpacing, y + 80, horizontalSpacing, selected);
+		//}
+		
+		if (selected && pNode->m_value == selected->m_value) {
+			pNode->Draw(x, y, (selected == pNode));
+			return;
+		}
+		if (pNode->HasLeft()) {
 			DrawLine(x, y, x - horizontalSpacing, y + 80, RED);
-			
 			Draw(pNode->GetLeft(), x - horizontalSpacing, y + 80, horizontalSpacing, selected);
 		}
-
-		if (pNode->HasRight())
-		{
+		if (pNode->HasRight()) {
 			DrawLine(x, y, x + horizontalSpacing, y + 80, RED);
-
 			Draw(pNode->GetRight(), x + horizontalSpacing, y + 80, horizontalSpacing, selected);
 		}
+		
 
 		pNode->Draw(x, y, (selected == pNode));
+
+
+
 	}
 }

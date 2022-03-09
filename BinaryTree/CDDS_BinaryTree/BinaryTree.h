@@ -16,6 +16,8 @@ public:
 	BinaryTree();
 	~BinaryTree();
 
+	TreeNode* GetRoot();
+
 	bool IsEmpty() const;
 	void Insert(int a_nValue);
 	void Remove(int a_nValue);
@@ -25,6 +27,10 @@ public:
 	void PrintUnordered();
 
 	void Draw(TreeNode* selected = nullptr);
+
+	//The root node of the tree
+	TreeNode* m_pRoot;
+
 
 private:
 	//Find the node with the specified value.
@@ -37,8 +43,6 @@ private:
 
 	void Draw(TreeNode*, int x, int y, int horizontalSpacing, TreeNode* selected = nullptr);
 
-	//The root node of the tree
-	TreeNode* m_pRoot;
 };
 
 #endif //_BINARYTREE_H_
