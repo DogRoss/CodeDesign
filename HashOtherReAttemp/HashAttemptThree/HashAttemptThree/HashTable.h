@@ -20,8 +20,6 @@ public:
 
 	unsigned int ht_insert(std::string value);
 
-	std::string ht_search(int hash);
-
 	void ht_delete(int hash);
 
 	void print_search(int hash);
@@ -31,13 +29,3 @@ public:
 
 };
 
-/*
-properties:--------------=
-list of items
-size of table
-count of items
--------------------------=
-
-
-
-*/

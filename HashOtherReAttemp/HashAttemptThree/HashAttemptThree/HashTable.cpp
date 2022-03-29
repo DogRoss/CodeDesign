@@ -18,14 +18,14 @@ unsigned int HashTable::myHash(std::string value)
 	return result * 'a';
 }
 
-unsigned int HashTable::hashToKey(int hash)
+unsigned int HashTable::hashToKey(int hash) //mod by table size to find location in table
 {
 	return hash % size;
 }
 
-unsigned int HashTable::ht_insert(std::string value)
+unsigned int HashTable::ht_insert(std::string value) //inserts value into hash table
 {
-	int hash = myHash(value);
+	int hash = myHash(value); //creates hash key, then creates the location in the table with the hash key
 	int index = hashToKey(hash);
 
 	std::cout << "hash:" << hash << "||index:" << index << std::endl;
@@ -47,21 +47,7 @@ unsigned int HashTable::ht_insert(std::string value)
 	}
 }
 
-std::string HashTable::ht_search(int hash)
-{
-	int index = hashToKey(hash);
-
-
-	if (!values[index].empty()) {
-		std::cout << "//Item isnt null" << std::endl;
-		return values[index];
-	}
-	std::cout << "Item is null + Returning null..." << std::endl;
-	return NULL;
-
-}
-
-void HashTable::ht_delete(int hash)
+void HashTable::ht_delete(int hash) //deletes specified item through hash key
 {
 	int index = hashToKey(hash);
 
@@ -76,23 +62,23 @@ void HashTable::ht_delete(int hash)
 
 }
 
-void HashTable::print_search(int hash)
+void HashTable::print_search(int hash) //prints info of specified hash item
 {
 	int index = hashToKey(hash);
 	if (values[index].empty()) {
 		std::cout << "Key: " << index << " does not exist" << std::endl;
 	}
 	else {
-		std::cout << "Key: " << index << " || Value: " << values[index] << std::endl;
+		std::cout << "Value: " << values[index] << ", Index: " << index << ", Hash: " << myHash(values[index]) << std::endl;
 	}
 }
 
-void HashTable::print_table()
+void HashTable::print_table() //prints hash table with associated and necessitated values
 {
 	std::cout << "------------------Hash Table-----------------" << std::endl;
 	for (int i = 0; i < size; i++) {
 		if (!values[i].empty()) {
-			std::cout << "Index: " << i << ", Value: " << values[i] << std::endl;
+			std::cout << "Value: " << values[i] << ", Index: " << i << ", Hash: " << myHash(values[i]) << std::endl;
 		}
 	}
 	std::cout << "----------------------------------------------" << std::endl;
