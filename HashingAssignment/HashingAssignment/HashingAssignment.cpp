@@ -4,6 +4,8 @@
 #include <string.h>
 #include <iostream>
 
+#include "HashTable.h"
+
 //TODO: ask rob how this works and why id use it
 #define CAPACITY 50000 //size of hash table
 
@@ -160,6 +162,7 @@ Ht_item* create_item(int key, std::string value) {
 
 	return item;
 }
+
 LinkedList** create_overflow_buckets(HashTable* table) { //TODO: proper comments
 	//Create the overflow buckets; an array of linkedlists
 	LinkedList** buckets = (LinkedList**)calloc(table->size, sizeof(LinkedList*));
@@ -193,12 +196,7 @@ HashTable* create_table(int size) {
 }
 
 
-void handle_collision(HashTable* table, Ht_item* item) {//TODO: (IMPORTANT) handle collision
 
-
-
-
-}
 void ht_insert(HashTable* table, std::string value) {
 	int hash = myHash(value); //compute index
 	int index = deHash(hash);
@@ -220,12 +218,8 @@ void ht_insert(HashTable* table, std::string value) {
 	else { //If the key of created item is found in table already
 		std::cout << "key found in table..." << std::endl;
 		//the items are the same, just needs to update the value
-		if (deHash(index) == 0) { //if keys are same
-			current_item->value = value; //copies created item key/value to item in table
-			return;
-		}
-		
-
+		current_item->SetValue(value);//copies created item key/value to item in table
+		return;
 	}
 
 }
@@ -332,9 +326,9 @@ void print_table(HashTable* table) { //TODO: proper comments
 int main() { //TODO: proper comments
 	HashTable* ht = create_table(CAPACITY);
 
-	std::string value = "First address";
-	unsigned int firstHash = myHash(value);
-	ht_insert(ht, value);
+	std::string item = "First address";
+	unsigned int firstHash = myHash(item);
+	ht_insert(ht, item);
 	//ht_insert(ht, "2", "Second address");
 	//ht_insert(ht, "Hel", "Third address");
 	//ht_insert(ht, "Cau", "Fourthh address");
@@ -360,6 +354,21 @@ int main() { //TODO: proper comments
 	}
 	
 }
+
+
+
+
+
+/*
+
+	
+
+*/
+
+
+
+
+
 
 
 

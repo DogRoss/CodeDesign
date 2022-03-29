@@ -15,15 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HashingAssignment.cpp">
+    <ClCompile Include="HashReAttempt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HashTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HashItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HashItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

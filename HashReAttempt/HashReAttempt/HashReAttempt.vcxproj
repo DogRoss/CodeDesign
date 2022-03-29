@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{9F21A1B2-D58E-4CC8-AB86-EA3E4FBE3E95}</ProjectGuid>
+    <ProjectGuid>{28827F69-C90A-44BA-BA94-A6FF39C87D21}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HashingAssignment</RootNamespace>
+    <RootNamespace>HashReAttempt</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -147,11 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HashingAssignment.cpp" />
+    <ClCompile Include="HashItem.cpp" />
+    <ClCompile Include="HashReAttempt.cpp" />
     <ClCompile Include="HashTable.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HashItem.h" />
     <ClInclude Include="HashTable.h" />
+    <ClInclude Include="LinkedList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
