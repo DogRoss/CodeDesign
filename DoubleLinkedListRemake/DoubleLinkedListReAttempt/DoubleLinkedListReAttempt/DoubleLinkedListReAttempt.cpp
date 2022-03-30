@@ -18,62 +18,7 @@ public:
 		Node* prev;
 		Node* next;
 
-		Node(int nodeValue) { value = nodeValue; };
-
-		void SetPrevTo(Node* node) {
-			
-		};
-
-		void SetNextTo(Node* node) {
-
-		};
-		void SwitchWith(Node* otherNode) { //only used on nodes current in list
-			Node* currentNode = this;
-
-			//set the corresponding prev/next of this node to the other ones prev/next nodes
-			prev = otherNode->prev ? otherNode->prev : NULL; 
-			next = otherNode->next ? otherNode->next : NULL;
-			//set the neighboring nodes proper prev/next nodes to current
-			if (otherNode->prev->next) {
-				otherNode->prev->next = currentNode;
-			}
-			if (otherNode->next->prev) {
-				otherNode->next->prev = currentNode;
-			}
-
-			//set other nodes prev/next to preSwitched version of this nodes prev/next
-			otherNode->prev = currentNode->prev ? currentNode->prev : NULL;
-			otherNode->next = currentNode->next ? currentNode->next : NULL;
-			//set neighboring nodes of this to proper prev/next nodes to other node
-			if (currentNode->prev) {
-				currentNode->prev->next = otherNode;
-			}
-			if (currentNode->next) {
-				currentNode->next->prev = otherNode;
-			}
-		};
-		void SqueezeInBetween(DoubleLinkedList* list, Node* leftNode, Node* rightNode) {
-
-			if (leftNode == NULL) {
-				list->head = this;
-			}
-			if (rightNode == NULL) {
-				list->tail = this;
-			}
-
-			prev = leftNode;
-			next = rightNode;
-
-			if (rightNode != NULL && leftNode != NULL) {
-				leftNode->next = this;
-			}
-			
-			
-			if (leftNode != NULL && rightNode != NULL) {
-				rightNode->prev = this;
-			}
-
-		};
+		Node(int nodeValue) { value = nodeValue; prev = NULL; next = NULL; };
 	};
 
 	//Variables
@@ -98,6 +43,7 @@ public:
 			tail = node;
 		}
 		else {
+			node->prev = tail;
 			tail->next = node;
 			tail = node;
 		}
@@ -106,49 +52,11 @@ public:
 		i++;
 	};
 
-	/*
-	Node* Traverse(int amount) { //traverse through list by specific amount
-		if (amount = 0) {
-			std::cout << "returning head only" << std::endl;
-			return head;
-		}
-
-		Node* currentNode = head;
-		int amountHolder = amount;
-		while (currentNode->next != NULL) {
-			std::cout << "loop" << std::endl;
-			if (amountHolder > 0) {
-				currentNode = currentNode->next;
-				amountHolder--;
-				std::cout << "minusminus" << std::endl;
-			}
-			else if(amountHolder <= 0) {
-				std::cout << "break" << std::endl;
-				break;
-			}
-			
-		}
-		return currentNode;
-		//return amountHolder > 0 ? currentNode : NULL;
-	};*/
-
-	Node* Traverse(Node* startingNode, int amount) { //traverse through list by specific amount
-		if (amount > 0) {
-			if (startingNode->next != NULL) {
-				Traverse(startingNode->next, amount - 1);
-			}
-			else {
-				return startingNode;
-			}
-		}
-		else {
-			return startingNode;
-		}
-	};
-
 	void InsertAtBegin(int value) {
 		Node* node = new Node(value);
-		node->SqueezeInBetween(this, NULL, head);
+		head->prev = node;
+		node->next = head;
+		head = node;
 		std::cout << head->value << " insert at begin complete" << std::endl;
 		i++;
 
@@ -156,7 +64,9 @@ public:
 
 	void InsertAtEnd(int value) {
 		Node* node = new Node(value);
-		node->SqueezeInBetween(this, tail, NULL);
+		tail->next = node;
+		node->prev = tail;
+		tail = node;
 		std::cout << tail->value << " insert at end complete" << std::endl;
 		i++;
 	};
@@ -164,55 +74,137 @@ public:
 	void InsertAtPos(int value, int pos) {
 		Node* node = new Node(value);
 
-		Node* positionNode = head;
-		Node* nextPositionNode = head->next;
-		int posStored = pos;
-		bool isFound = false;
 		if (pos == 0) {
-			isFound = true;
-			positionNode = NULL;
-			nextPositionNode = head;
-
+			InsertAtBegin(value);
+			return;
 		}
-		while (!isFound) {
-			if (posStored <= 0) {
-				std::cout << "breakout" << std::endl;
-				isFound = true;
+
+		Node* leftofPos = NULL;
+		Node* rightOfPos = head;
+
+		for (int i = pos; i > 0; i--) {
+			
+			if (rightOfPos->next == NULL) {
+				leftofPos = rightOfPos;
+				rightOfPos = NULL;
 				break;
 			}
 
-			if (positionNode->next != NULL) {
-				positionNode = positionNode->next;
-			}
-			else {
-				break;
-			}
-			posStored--;
-		}
-
+			rightOfPos = rightOfPos->next;
 		
-		if (positionNode != NULL && positionNode->next != NULL) {
-			nextPositionNode = positionNode->next;
+			leftofPos = rightOfPos->prev;
+			
 		}
-		else{
-			nextPositionNode = NULL;
+
+		node->prev = leftofPos;
+		node->next = rightOfPos;
+
+		if (leftofPos != NULL) {
+			leftofPos->next = node;
 		}
-		node->SqueezeInBetween(this, positionNode, nextPositionNode);
+		if (rightOfPos != NULL) {
+			rightOfPos->prev = node;
+		}
+
 		std::cout << " insert at specific pos done" << std::endl;
 		i++;
 	};
 
 	void DelAtBegin() {
-
+		head = head->next;
+		head->prev = NULL;
+		std::cout << " delete at begin complete" << std::endl;
+		i--;
 	};
 
 	void DelAtEnd() {
-
+		tail = tail->prev;
+		tail->next = NULL;
+		std::cout << " delete at end complete" << std::endl;
+		i--;
 	};
 
 	void DelAtPos(int pos) {
+		if (pos == 0) {
+			DelAtBegin();
+			return;
+		}
 
+		Node* currentNode = head;
+
+		for (int i = pos - 1; i > 0; i--) {
+
+			if (currentNode->next == NULL) {
+				DelAtEnd();
+				currentNode = NULL;
+				return;
+			}
+
+			currentNode = currentNode->next;
+
+		}
+
+		currentNode->next->prev = currentNode->prev;
+		currentNode->prev->next = currentNode->next;
+
+		std::cout << " delete at specific pos done" << std::endl;
+		i--;
 	};
+
+	int GetListCount() {
+		Node* currentNode = head;
+		int amount = 0;
+		while (currentNode != NULL) {
+			currentNode = currentNode->next;
+			amount++;
+		}
+
+		return amount;
+	}
+
+	void SortList() {
+		Node* currentNode = head;
+		int listAmount = GetListCount();
+		int inOrderCount = 0;
+		bool sorted = false;
+		while (!sorted) {
+			inOrderCount++;
+			if (currentNode == head) {	//if head
+				if (currentNode->value > currentNode->next->value) { //if left greater than right
+					Node* nextCopy = currentNode->next; //copy of next
+					head = nextCopy; //makes head next
+					head->prev = NULL; //sets head prev to null
+					head->next->prev = currentNode;//sets node originally after head to be current to squeeze it in
+					head->next = currentNode;//sets head current next to node
+					inOrderCount = 0;
+				}
+			}
+			else if (currentNode == tail) {
+				sorted = true;
+				break;
+			}
+			else if (currentNode->value > currentNode->next->value) {
+				Node* nextCopy = currentNode->next;//create copy of next
+				nextCopy->prev = currentNode->prev;
+				nextCopy->next = currentNode;
+				
+				currentNode->prev->next = currentNode->next; //sets the previous of current node to the current-next node
+				currentNode->prev = currentNode->next;//set current selected nodes previous to next
+				currentNode->next = currentNode->next->next;
+
+				currentNode = nextCopy;
+			}
+
+			if (inOrderCount >= listAmount) {
+				sorted = true;
+				break;
+			}
+		}
+
+		if (inOrderCount < listAmount) {
+			SortList();
+		}
+	}
 
 	void PrintList() {
 		Node* currentNode = head;
@@ -232,18 +224,32 @@ int main()
 	list->AddNode(4);
 	list->AddNode(53345);
 	list->AddNode(111);
+	
 	list->InsertAtBegin(25);
 	list->InsertAtPos(42, 0);
 	list->InsertAtPos(52, 0);
-	list->InsertAtPos(333, 20);
+	//list->InsertAtPos(333, 20);
+	list->PrintList();
+	list->InsertAtPos(22, 1);
 	list->InsertAtPos(55, 4);
-
+	list->InsertAtBegin(101);
+	list->InsertAtEnd(202);
 
 	list->PrintList();
 
-	std::cout << "bruh..................\n";
+	list->DelAtBegin();
+	list->DelAtEnd();
 
+	list->PrintList();
 
+	list->DelAtPos(4);
+
+	list->PrintList();
+
+	list->SortList();
+	list->PrintList();
+
+	std::cout << "end of program..................\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
