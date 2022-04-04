@@ -18,20 +18,16 @@ public:
 		Node* prev;
 		Node* next;
 
-		Node(int nodeValue) { value = nodeValue; prev = NULL; next = NULL; };
+		Node(int nodeValue) : value(nodeValue), prev(nullptr), next(nullptr) {};
 	};
 
 	//Variables
-	int i = 0;
+	int i;
 	Node* head;
 	Node* tail;
 
 	//Constructor
-	DoubleLinkedList() {
-		i = 0;
-		head = NULL;
-		tail = NULL;
-	};
+	DoubleLinkedList() : i(0), head(nullptr), tail(nullptr) {};
 
 	//Functions
 
@@ -47,8 +43,8 @@ public:
 			tail->next = node;
 			tail = node;
 		}
-		
-		std::cout << tail->value  << " addnode complete" << std::endl;
+
+		std::cout << tail->value << " addnode complete" << std::endl;
 		i++;
 	};
 
@@ -82,14 +78,14 @@ public:
 		Node* nextPos = head;
 
 		for (int i = pos; i > 0; i--) {
-			
+
 			if (nextPos->next == NULL) {
 				break;
 			}
 
 			nextPos = nextPos->next;
-		
-			
+
+
 		}
 
 		node->prev = nextPos->prev;
@@ -161,47 +157,19 @@ public:
 		return amount;
 	}
 
-	void SortList() {
-		Node* currentNode = head;
-		int listAmount = GetListCount();
-		int inOrderCount = 0;
-		bool sorted = false;
-		while (!sorted) {
-			inOrderCount++;
-			if (currentNode == head) {	//if head
-				if (currentNode->value > currentNode->next->value) { //if left greater than right
-					Node* nextCopy = currentNode->next; //copy of next
-					head = nextCopy; //makes head next
-					head->prev = NULL; //sets head prev to null
-					head->next->prev = currentNode;//sets node originally after head to be current to squeeze it in
-					head->next = currentNode;//sets head current next to node
-					inOrderCount = 0;
-				}
+	void SortList(Node* current)
+	{
+		if (current->next)
+		{
+			if (current->value > current->next->value)
+			{
+				std::swap(current->value, current->next->value);
+				SortList(head);
 			}
-			else if (currentNode == tail) {
-				sorted = true;
-				break;
+			else
+			{
+				SortList(current->next);
 			}
-			else if (currentNode->value > currentNode->next->value) {
-				Node* nextCopy = currentNode->next;//create copy of next
-				nextCopy->prev = currentNode->prev;
-				nextCopy->next = currentNode;
-				
-				currentNode->prev->next = currentNode->next; //sets the previous of current node to the current-next node
-				currentNode->prev = currentNode->next;//set current selected nodes previous to next
-				currentNode->next = currentNode->next->next;
-
-				currentNode = nextCopy;
-			}
-
-			if (inOrderCount >= listAmount) {
-				sorted = true;
-				break;
-			}
-		}
-
-		if (inOrderCount < listAmount) {
-			SortList();
 		}
 	}
 
@@ -225,16 +193,19 @@ int main()
 	list->AddNode(4);
 	list->AddNode(53345);
 	list->AddNode(111);
-	
+
 	list->InsertAtBegin(25);
 	list->InsertAtPos(42, 0);
 	list->InsertAtPos(52, 0);
 	//list->InsertAtPos(333, 20);
 	list->PrintList();
 	list->InsertAtPos(22, 1);
+	list->PrintList();
 	list->InsertAtPos(55, 4);
+	list->PrintList();
 	list->InsertAtBegin(101);
-	list->InsertAtEnd(202);
+	list->PrintList();
+	list->InsertAtPos(222, 1);
 
 	list->PrintList();
 
@@ -247,7 +218,7 @@ int main()
 
 	list->PrintList();
 
-	list->SortList();
+	list->SortList(list->head);
 	list->PrintList();
 
 	std::cout << "end of program..................\n";
