@@ -79,31 +79,30 @@ public:
 			return;
 		}
 
-		Node* leftofPos = NULL;
-		Node* rightOfPos = head;
+		Node* nextPos = head;
 
 		for (int i = pos; i > 0; i--) {
 			
-			if (rightOfPos->next == NULL) {
-				leftofPos = rightOfPos;
-				rightOfPos = NULL;
+			if (nextPos->next == NULL) {
 				break;
 			}
 
-			rightOfPos = rightOfPos->next;
+			nextPos = nextPos->next;
 		
-			leftofPos = rightOfPos->prev;
 			
 		}
 
-		node->prev = leftofPos;
-		node->next = rightOfPos;
+		node->prev = nextPos->prev;
+		node->next = nextPos;
 
-		if (leftofPos != NULL) {
-			leftofPos->next = node;
+		if (nextPos->prev != NULL) {
+			nextPos->prev->next = node;
 		}
-		if (rightOfPos != NULL) {
-			rightOfPos->prev = node;
+		else {
+			head = node;
+		}
+		if (nextPos != NULL) {
+			nextPos->prev = node;
 		}
 
 		std::cout << " insert at specific pos done" << std::endl;
@@ -209,11 +208,13 @@ public:
 	void PrintList() {
 		Node* currentNode = head;
 		int amount = 0;
-		while(currentNode != NULL) {
+		while (currentNode != NULL) {
 			std::cout << "Node(" << amount << ") value: " << currentNode->value << std::endl;
 			currentNode = currentNode->next;
 			amount++;
 		}
+
+		std::cout << "head: " << head->value << " || tail: " << tail->value << std::endl;
 	}
 };
 
