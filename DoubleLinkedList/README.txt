@@ -1,2 +1,0 @@
-To Compile: in the top left, under 'Debug', you will see a dropdown labeled either 'Release'/'Debug', make sure this is release.
-Then, at the top, find 'build', click the dropdown and click 'build solution'
