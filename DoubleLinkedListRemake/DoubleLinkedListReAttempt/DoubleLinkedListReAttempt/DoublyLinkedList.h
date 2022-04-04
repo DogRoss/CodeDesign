@@ -54,5 +54,6 @@ public:
 	void PrintList(std::string message = "Default Print");
 
 	Node* Traverse(Node* current, int amount);
+
 };
 

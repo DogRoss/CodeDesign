@@ -129,6 +129,7 @@
 		return amount;
 	}
 
+	/*
 	void DoublyLinkedList::CompareAndSwitch(Node* current, Node* next, bool returnOnThisCall) {
 		PrintList("CompareDebug");
 		if (returnOnThisCall) {
@@ -147,8 +148,8 @@
 				}
 				else {
 					next->next = current;
-					current->next = NULL;
 					tail = current;
+					tail->next = NULL;
 				}
 				
 				//PrintList("Checkup One");
@@ -161,7 +162,6 @@
 				else {
 					next->prev = NULL;
 					current->prev = next;
-					std::cout << "current prev doesnt exist" << std::endl;
 				}
 				
 				//PrintList("Checkup Two");
@@ -172,6 +172,63 @@
 					head->prev = NULL;
 				}
 
+				CompareAndSwitch(head, head->next, false);
+			}
+			else {
+				if (current->next == NULL) {
+					CompareAndSwitch(current->next, next->next, true);
+				}
+				else {
+					CompareAndSwitch(current->next, next->next, false);
+
+				}
+
+			}
+		}
+	}
+	*/
+
+	void DoublyLinkedList::CompareAndSwitch(Node* current, Node* next, bool returnOnThisCall) {
+		if (returnOnThisCall) {
+			return;
+		}
+
+		if (next) {
+			if (current->value > next->value) {
+				if (current == head) {
+					current->next = next->next;
+					current->prev = next;
+					next->next->prev = current;
+					next->next = current;
+					
+					next->prev = NULL;
+
+					head = next;
+				}
+				else if (next == tail) {
+					current->next = NULL;
+
+					current->prev->next = next;
+					
+					next->next = current;
+					next->prev = current->prev;
+
+					current->prev = next;
+
+					tail = current;
+				}
+				else {
+					next->next->prev = current;
+					current->prev->next = next;
+					
+					next->prev = current->prev;
+					
+					current->next = next->next;
+					current->prev = next;
+
+					next->next = current;
+				}
+				//PrintList("Checkup Two");
 				CompareAndSwitch(head, head->next, false);
 			}
 			else {
