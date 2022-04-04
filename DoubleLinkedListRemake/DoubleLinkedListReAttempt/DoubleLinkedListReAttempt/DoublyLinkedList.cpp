@@ -141,14 +141,17 @@
 				if (next != tail) {
 					current->next = next->next;
 					next->next = current;
-					if (next->next) {
+					if (next->next != NULL) {
 						next->next->prev = current;
 					}
 				}
 				else {
-					
+					next->next = current;
+					current->next = NULL;
+					tail = current;
 				}
-				PrintList("Checkup One");
+				
+				//PrintList("Checkup One");
 				
 
 				if (current->prev) {
@@ -158,13 +161,15 @@
 				else {
 					next->prev = NULL;
 					current->prev = next;
+					std::cout << "current prev doesnt exist" << std::endl;
 				}
 				
-				PrintList("Checkup Two");
+				//PrintList("Checkup Two");
 
 
 				if (current == head) {
 					head = next;
+					head->prev = NULL;
 				}
 
 				CompareAndSwitch(head, head->next, false);
