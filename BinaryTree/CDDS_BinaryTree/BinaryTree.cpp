@@ -189,9 +189,14 @@ void BinaryTree::Remove(int a_nValue)
 
 	FindNode(a_nValue, valueNode, parentNode); //finds nodes from value
 
-	current = valueNode;
+	current = valueNode; //iterating starting point
 	previous = parentNode;
-	if (current->HasRight()) { 
+	if (valueNode == GetRoot()) {
+		valueNode->SetLeft(GetRoot());
+		m_pRoot = valueNode;
+		return;
+	}
+	if (current->HasRight()) {  
 		previous = previous->GetRight();
 		current = current->GetRight();
 
@@ -206,10 +211,26 @@ void BinaryTree::Remove(int a_nValue)
 		}
 
 		valueNode->SetData(current->GetData());
-		current->
 
+		if (valueNode == parentNode->GetLeft()) {
+			parentNode->SetLeft(current->GetRight());
+		}
+		else if (valueNode == parentNode->GetRight()) {
+			parentNode->SetRight(current->GetRight());
+		}
 
 	}
+	else{
+		if (valueNode == parentNode->GetLeft()) {
+			parentNode->SetLeft(current->GetLeft());
+		}
+		else if (valueNode == parentNode->GetRight()) {
+			parentNode->SetRight(current->GetLeft());
+		}
+		
+	}
+
+
 
 	
 }

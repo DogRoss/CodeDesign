@@ -29,12 +29,22 @@ int TreeNode::GetData()
 
 TreeNode* TreeNode::GetLeft()
 {
-	return m_left;
+	if (HasLeft()) {
+		return m_left;
+	}
+	else {
+		return nullptr;
+	}
 }
 
 TreeNode* TreeNode::GetRight()
 {
-	return m_right;
+	if (HasRight()) {
+		return m_right;
+	}
+	else {
+		return nullptr;
+	}
 }
 
 void TreeNode::SetNode(TreeNode* node)
