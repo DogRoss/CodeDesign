@@ -181,153 +181,37 @@ bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& p
 
 void BinaryTree::Remove(int a_nValue)
 {
-	// if tree empty, value is inserted at root
-	if (m_pRoot == nullptr)
-	{
-		std::cout << "no numbers present on tree" << std::endl;
-	}
-	else if (m_pRoot != nullptr)
-	{//TODO: left right tree implementation
+	TreeNode* parentNode; //nodes of removal
+	TreeNode* valueNode;
 
-		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
+	TreeNode* previous; //iterating nodes
+	TreeNode* current;
 
-		//TODO:temp variables
-		bool isNull = false;
+	FindNode(a_nValue, valueNode, parentNode); //finds nodes from value
 
-		std::cout << "before while called" << std::endl;
+	current = valueNode;
+	previous = parentNode;
+	if (current->HasRight()) { 
+		previous = previous->GetRight();
+		current = current->GetRight();
 
-		while (!isNull)
-		{
-			std::cout << "entered while state" << std::endl;
-			if (a_nValue > currentNode->GetData()) //if value is greater than current node, right side node
-			{
-				std::cout << "entered first conditional" << std::endl;
-
-				if (!currentNode->HasRight())
-				{
-
-					//TODO: debug console
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-
-				}
-				else {
-					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
-					currentNode = currentNode->GetRight(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-
-				}
-
-
+		while (true) {
+			if (current->HasLeft()) {
+				previous = current->GetLeft();
+				current = current->GetLeft();
 			}
-			else if (a_nValue < currentNode->GetData()) //if value is less than current node, left side node
-			{
-				std::cout << "entered second conditional" << std::endl;
-
-				if (!currentNode->HasLeft())
-				{
-					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
-					break;
-				}
-				else {
-					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
-					currentNode = currentNode->GetLeft(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-
+			else {
+				break;
 			}
-
-
-			else if (a_nValue == currentNode->GetData()) //if value is same as node, delete node
-			{
-				std::cout << "entered third conditional, begin deletion process" << std::endl;
-
-
-				/*//if the value on the right is greater than the left, it gains priority
-				if (currentNode->GetRight()->GetData() > currentNode->GetLeft()->GetData()) {
-					//right side priority
-					currentNode = currentNode->GetRight();
-				}
-				else {
-					//left side priority
-					currentNode = currentNode->GetLeft();
-				}*/
-
-				TreeNode* temp = currentNode;
-
-				if (currentNode->HasLeft()) {
-					currentNode = currentNode->GetLeft(); //sets the left side node to the removed node
-					//if multiple right side nodes you might run into a problem 
-
-					std::cout << "left node set, iterate through left-right nodes" << std::endl;
-					
-					bool shouldStop = false;
-					int i = 0;
-					while (!shouldStop) {
-						i++;
-						std::cout << "entering while loop, " << i << " loops" << std::endl;
-						
-						if (currentNode->GetRight()) { //TODO: get this to not break and throw a read access violation
-							currentNode = currentNode->GetRight();
-						}
-						else if (currentNode->GetLeft()) {
-							currentNode = currentNode->GetLeft();
-						}
-						else {
-							std::cout << "neither left nor right node exist, breaking... (BinaryTree.cpp, line 278)" << std::endl;
-							break;
-						}
-
-
-						
-					}
-
-				}
-				else if(currentNode->HasRight()) { //if no left side
-
-					currentNode = currentNode->GetRight(); //sets the left side node to the removed node
-					//if multiple right side nodes you might run into a problem 
-
-					std::cout << "left node set, iterate through left-right nodes" << std::endl;
-
-					bool shouldStop = false;
-					int i = 0;
-					while (!shouldStop) {
-						i++;
-						std::cout << "entering while loop, " << i << " loops" << std::endl;
-
-						if (currentNode->GetRight()) { //TODO: get this to not break and throw a read access violation
-							currentNode = currentNode->GetRight();
-						}
-						else if (currentNode->GetLeft()) {
-							currentNode = currentNode->GetLeft();
-						}
-						else {
-							std::cout << "neither left nor right node exist, breaking... (BinaryTree.cpp, line 309)" << std::endl;
-							break;
-						}
-
-
-
-					}
-				}
-				else {
-					std::cout << "before break" << std::endl;
-					delete currentNode;
-					break;
-				}
-				
-			}
-
-			
-
 		}
 
+		valueNode->SetData(current->GetData());
+		current->
+
 
 	}
+
+	
 }
 
 void BinaryTree::PrintOrdered()

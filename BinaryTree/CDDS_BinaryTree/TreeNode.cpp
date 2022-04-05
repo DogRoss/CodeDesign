@@ -12,27 +12,36 @@ TreeNode::~TreeNode()
 {
 }
 
+bool TreeNode::HasLeft()
+{
+	return m_left != nullptr;
+}
+
+bool TreeNode::HasRight()
+{
+	return m_right != nullptr;
+}
+
+int TreeNode::GetData()
+{
+	return m_value;
+}
+
+TreeNode* TreeNode::GetLeft()
+{
+	return m_left;
+}
+
+TreeNode* TreeNode::GetRight()
+{
+	return m_right;
+}
+
 void TreeNode::SetNode(TreeNode* node)
 {
 	m_value = node->GetData();
-
-	if (node->HasLeft())
-	{
-		m_left = node->GetLeft();
-	}
-	else 
-	{
-		m_left = nullptr;
-	}
-	if (node->HasRight())
-	{
-		m_right = node->GetRight();
-	}
-	else
-	{
-		m_right = nullptr;
-	}
-	
+	m_left = node->GetLeft();
+	m_right = node->GetRight();
 }
 
 
