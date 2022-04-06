@@ -20,7 +20,7 @@ BinaryTree::~BinaryTree()
 {
 	while(m_pRoot)
 	{
-		Remove(m_pRoot->GetData());
+		Remove(m_pRoot);
 	}
 }
 
@@ -34,7 +34,14 @@ bool BinaryTree::IsEmpty() const
 // Smaller elements are placed to the left, larger onces are placed to the right.
 void BinaryTree::Insert(int a_nValue)
 {
-	
+	/*
+	check if root is nullptr, if so insert and return
+	if not:
+	check if the value is greater or less than the root node
+	if so: iterate right and use a while to continue iterating until a empty node at the correct position is reached. return.
+	if not: iterate left and use a while to continue iterating until a empty node at the correct position is reached. return.
+	do a final check to see if the value is already in the tree. return;
+	*/
 }
 
 TreeNode* BinaryTree::Find(int a_nValue)
@@ -47,59 +54,30 @@ TreeNode* BinaryTree::Find(int a_nValue)
 
 bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent)
 {
-	// if tree empty, value is inserted at root
-	if (m_pRoot == nullptr)
-	{
-		std::cout << "no numbers present on tree" << std::endl;
-	}
-	else if (m_pRoot != nullptr)
-	{//TODO: left right tree implementation
-
-		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
-
-		//TODO:temp variables
-		bool isNull = false;
-
-		while (!isNull)
-		{
-			std::cout << "entered while state" << std::endl;
-			if (a_nSearchValue == currentNode->GetData())
-			{
-				ppOutNode = currentNode;
-				break;
-			}
-			else if (a_nSearchValue > currentNode->GetData()) {
-				if (currentNode->HasRight()) {
-					currentNode = currentNode->GetRight(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				else {
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-				}
-			}
-			else if (a_nSearchValue < currentNode->GetData()) {
-				if (currentNode->HasRight()) {
-					currentNode = currentNode->GetLeft(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				else {
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-				}
-			}
-		}
-
-
-	}
-
-	return false;
+	/*
+	
+	*/
 }
 
+void BinaryTree::Remove(TreeNode* nodeToDelete) {
+	/*
+	Save the left and right node of the node to delete with a ptr node
+	create new nodes for iterating (parent and current)
+	set current node to nodeToDelete, and set parent to null
+
+	check if current is root
+	if so:
+	check if right node exists
+		if so:
+		set current to right then:
+		use a traverse function 
+		if not:
+	if not:
+
+	*/
+}
+
+/*
 void BinaryTree::Remove(int a_nValue)
 {
 	TreeNode* parentNode; //nodes of removal
@@ -150,28 +128,7 @@ void BinaryTree::Remove(int a_nValue)
 		}
 	}
 }
-
-void BinaryTree::PrintOrdered()
-{
-	PrintOrderedRecurse(m_pRoot);
-	cout << endl;
-}
-
-void BinaryTree::PrintOrderedRecurse(TreeNode* pNode)
-{
-
-}
-
-void BinaryTree::PrintUnordered()
-{
-    PrintUnorderedRecurse(m_pRoot);
-	cout << endl;
-}
-
-void BinaryTree::PrintUnorderedRecurse(TreeNode* pNode)
-{
-
-}
+*/
 
 void BinaryTree::Draw(TreeNode* selected)
 {

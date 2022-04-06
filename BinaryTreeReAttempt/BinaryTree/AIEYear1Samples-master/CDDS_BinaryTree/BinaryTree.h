@@ -16,7 +16,7 @@ public:
 
 	bool IsEmpty() const;
 	void Insert(int a_nValue);
-	void Remove(int a_nValue);
+	void Remove(TreeNode* nodeToRemove);
 	TreeNode* Find(int a_nValue);
 
 	void PrintOrdered();
@@ -27,11 +27,6 @@ public:
 private:
 	//Find the node with the specified value.
 	bool FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent);
-
-	//Used to recurse through the nodes in value order and print their values.
-	void PrintOrderedRecurse(TreeNode*);
-	void PrintUnorderedRecurse(TreeNode*);
-
 
 	void Draw(TreeNode*, int x, int y, int horizontalSpacing, TreeNode* selected = nullptr);
 
