@@ -8,19 +8,17 @@ public:
 	TreeNode(int value);
 	~TreeNode();
 
-	bool HasLeft();
-	bool HasRight();
+	bool HasLeft() { return (m_left != nullptr); };
+	bool HasRight() { return (m_right != nullptr); }
 
-	int GetData();
-	TreeNode* GetLeft();
-	TreeNode* GetRight();
+	int GetData() { return m_value; };
+	TreeNode* GetLeft() { return m_left; };
+	TreeNode* GetRight() { return m_right; };
 
 	
 	void SetData(int value) { m_value = value; }//TODO: Finish SetData Function
 	void SetLeft(TreeNode* node) { m_left = node; }
 	void SetRight(TreeNode* node) { m_right = node; }
-
-	void SetNode(TreeNode* node);
 
 	void Draw(int x, int y, bool selected=false);
 

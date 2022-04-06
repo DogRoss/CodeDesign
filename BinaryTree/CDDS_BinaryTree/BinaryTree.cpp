@@ -24,10 +24,6 @@ BinaryTree::~BinaryTree()
 	}
 }
 
-TreeNode* BinaryTree::GetRoot() {
-	return m_pRoot;
-}
-
 // Return whether the tree is empty
 bool BinaryTree::IsEmpty() const 
 { 
@@ -38,82 +34,46 @@ bool BinaryTree::IsEmpty() const
 // Smaller elements are placed to the left, larger onces are placed to the right.
 void BinaryTree::Insert(int a_nValue)
 {
-	
+	TreeNode* iCurrent;
+	TreeNode* newNode = new TreeNode(a_nValue);
+	TreeNode* iParent = nullptr;
 
-	// if tree empty, value is inserted at root
-	if (m_pRoot == nullptr)
-	{
-		m_pRoot = new TreeNode(a_nValue);			//sets root if null
+	iCurrent = m_pRoot;
+
+	if (BinaryTree::IsEmpty()) {
+		m_pRoot = newNode;
+		return;
 	}
-	else if(m_pRoot != nullptr)
-	{//TODO: left right tree implementation
+	while (iCurrent != nullptr) {
+		if (a_nValue < iCurrent->GetData()) {
+			std::cout<< "went left" <<std::endl;
+			iParent = iCurrent;
+			iCurrent = iCurrent->GetLeft();
+		}
+		else if (a_nValue > iCurrent->GetData()) {
+			std::cout << "went right" << std::endl;
 
-		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
-		//currentNode.SetLeft(m_pRoot->GetLeft());
-		//currentNode.SetRight(m_pRoot->GetRight());
+			iParent = iCurrent;
+			iCurrent = iCurrent->GetRight();
+		}
+		else if (a_nValue == iCurrent->GetData()) {
+			std::cout << "already exists" << std::endl;
 
-		TreeNode* valueNode = new TreeNode(a_nValue);
-
-		//TODO:temp variables
-		bool isNull = false;
-
-		while (!isNull)
-		{
-			std::cout << "entered while state" << std::endl;
-			if (a_nValue > currentNode->GetData()) //if value is greater than current node, right side node
-			{
-				std::cout << "entered first conditional" << std::endl;
-
-				if (!currentNode->HasRight())
-				{
-
-					//TODO: debug console
-					std::cout << "entered right check first conditional, break here (Success)" << std::endl;
-
-
-
-					currentNode->SetRight(valueNode); //set tree node here
-					break;
-					
-				}
-				else {
-					std::cout << "entered right check second conditional, check next one (Success)" << std::endl;
-					currentNode = currentNode->GetRight(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				
-				
-			}
-			else if (a_nValue < currentNode->GetData()) //if value is less than current node, left side node
-			{
-				std::cout << "entered second conditional" << std::endl;
-
-				if (!currentNode->HasLeft())
-				{
-					std::cout << "entered left check first conditional, break here (Success)" << std::endl;
-					currentNode->SetLeft(valueNode); //set tree node here
-					break;
-				}
-				else {
-					std::cout << "entered right check second conditional, break here (Success)" << std::endl;
-					currentNode = currentNode->GetLeft(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				
-			}
-			else if (a_nValue == currentNode->GetData()) //if value is same as node, exit
-			{
-				std::cout << "entered third conditional, value already exists" << std::endl;
-				currentNode->SetData(a_nValue);
-				break;
-			}
-
+			iParent = iCurrent;
+			return;
 		}
 
-		
 	}
+	
+	if (iParent->GetData() > a_nValue) {
+		iParent->SetLeft(newNode);
+		return;
+	}
+	else {
+		iParent->SetRight(newNode);
+		return;
+	}
+
 }
 
 TreeNode* BinaryTree::Find(int a_nValue)
@@ -124,115 +84,204 @@ TreeNode* BinaryTree::Find(int a_nValue)
 	return FindNode(a_nValue, pCurrent, pParent) ? pCurrent: nullptr; 
 }
 
-bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent)
+void BinaryTree::TraverseRight(TreeNode* &startingPoint, TreeNode*& startingParent)
 {
-	// if tree empty, value is inserted at root
-	if (m_pRoot == nullptr)
-	{
-		std::cout << "no numbers present on tree" << std::endl;
-	}
-	else if (m_pRoot != nullptr)
-	{//TODO: left right tree implementation
-
-		TreeNode* currentNode = m_pRoot; //sets currently selected node to root
-
-		//TODO:temp variables
-		bool isNull = false;
-
-		while (!isNull)
-		{
-			std::cout << "entered while state" << std::endl;
-			if(a_nSearchValue == currentNode->GetData()) 
-			{
-				ppOutNode = currentNode;
-				break;
-			}
-			else if (a_nSearchValue > currentNode->GetData()) {
-				if (currentNode->HasRight()) {
-					currentNode = currentNode->GetRight(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				else {
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-				}
-			}
-			else if (a_nSearchValue < currentNode->GetData()) {
-				if (currentNode->HasRight()) {
-					currentNode = currentNode->GetLeft(); //sets currently selected node to root
-					currentNode->SetLeft(currentNode->GetLeft());
-					currentNode->SetRight(currentNode->GetRight());
-				}
-				else {
-					std::cout << "error: number isnt present in tree" << std::endl;
-
-					break;
-				}
-			}						
+	while (true) {
+		if (startingPoint->HasRight()) {
+			startingParent = startingPoint;
+			startingPoint = startingPoint->GetRight();
 		}
-
-
+		else {
+			break;
+		}
 	}
-
-	return false;
 }
 
-void BinaryTree::Remove(int a_nValue)
+void BinaryTree::TraverseLeft(TreeNode* &startingPoint, TreeNode*& startingParent)
 {
-	TreeNode* parentNode; //nodes of removal
-	TreeNode* valueNode;
-
-	TreeNode* previous; //iterating nodes
-	TreeNode* current;
-
-	FindNode(a_nValue, valueNode, parentNode); //finds nodes from value
-
-	current = valueNode; //iterating starting point
-	previous = parentNode;
-	if (valueNode == GetRoot()) {
-		valueNode->SetLeft(GetRoot());
-		m_pRoot = valueNode;
-		return;
+	
+	while (true) {
+		if (startingPoint->HasLeft()) {
+			startingParent = startingPoint;
+			startingPoint = startingPoint->GetLeft();
+		}
+		else {
+			break;
+		}
 	}
-	if (current->HasRight()) {  
-		previous = previous->GetRight();
-		current = current->GetRight();
+}
 
-		while (true) {
-			if (current->HasLeft()) {
-				previous = current->GetLeft();
+bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent)
+{
+	TreeNode* current = m_pRoot;
+	TreeNode* parent = nullptr;
+
+	while (current != nullptr) {
+		if (a_nSearchValue == current->GetData()) {
+			ppOutNode = current;
+			ppOutParent = parent;
+
+			return true;
+		}
+		else {
+			if (a_nSearchValue < current->GetData()) {
+				parent = current;
 				current = current->GetLeft();
 			}
 			else {
-				break;
+				parent = current;
+				current = current->GetRight();
 			}
 		}
-
-		valueNode->SetData(current->GetData());
-
-		if (valueNode == parentNode->GetLeft()) {
-			parentNode->SetLeft(current->GetRight());
-		}
-		else if (valueNode == parentNode->GetRight()) {
-			parentNode->SetRight(current->GetRight());
-		}
-
 	}
-	else{
-		if (valueNode == parentNode->GetLeft()) {
-			parentNode->SetLeft(current->GetLeft());
+	return false;
+}
+
+/*
+void BinaryTree::Remove(int a_nValue)
+{
+	TreeNode* rCurrent = nullptr;
+	TreeNode* rParent = nullptr;
+
+	bool run = FindNode(a_nValue, rCurrent, rParent);
+	TreeNode* current;
+
+
+	current = rCurrent;
+
+	if (run == false) {
+		return;
+	}
+	else {
+		if (rCurrent == m_pRoot) {
+			if (m_pRoot->HasLeft()) {
+				if (m_pRoot->GetLeft() != nullptr) {
+					//m_pRoot = m_pRoot->GetLeft();
+					m_pRoot->SetData(m_pRoot->GetLeft()->GetData());
+
+					if (m_pRoot->GetLeft()->HasLeft()) {
+						m_pRoot->SetLeft(m_pRoot->GetLeft()->GetLeft());
+					}
+
+				}
+			}
+			else if(m_pRoot->HasRight()){
+				if (m_pRoot->GetRight() != nullptr) {
+					//m_pRoot = m_pRoot->GetRight();
+					m_pRoot->SetData(m_pRoot->GetRight()->GetData());
+
+					if (m_pRoot->GetRight()->HasRight()) {
+						m_pRoot->SetRight(m_pRoot->GetRight()->GetRight());
+					}
+
+				}
+			}
+			else {
+				m_pRoot = nullptr;
+			}
+
 		}
-		else if (valueNode == parentNode->GetRight()) {
-			parentNode->SetRight(current->GetLeft());
+		else if (rCurrent->HasRight()) {
+
+			while (current->HasLeft()) { //finds minimum node
+				if (current->HasLeft()) {
+					current = current->GetLeft();
+				}
+			}
+
+			current = current->GetLeft();
+			if (rParent != nullptr && rParent->GetLeft() == rCurrent) {
+				rParent->SetLeft(current);
+				current->SetLeft(nullptr);
+			}
+			else {
+				
+				rParent->SetRight(current);
+				
+				current->SetLeft(nullptr);
+			}
+		}
+		else if (rParent->GetLeft() == current) {
+			rParent->SetLeft(current->GetRight());
+		}
+		else if (rParent->GetRight() == current) {
+			rParent->SetRight(current->GetLeft());
 		}
 		
+		
+	}
+	
+
+}
+
+//
+TreeNode* rCurrent = nullptr;
+	TreeNode* rParent = nullptr;
+
+	bool run = FindNode(a_nValue, rCurrent, rParent);
+	TreeNode* current;
+	TreeNode* parent = nullptr;
+
+
+	current = rCurrent;
+
+	if (current == m_pRoot) { //if root
+		cout << "is root" << std::endl;
+		if (current->HasRight()) { //if a right node exists
+			cout << "is going right" << std::endl;
+			current = current->GetRight();
+			TraverseLeft(current, parent);
+			m_pRoot->SetData(current->GetData());
+
+			//if (m_pRoot->HasRight() && m_pRoot->GetRight()->HasRight()) {
+			//	m_pRoot->SetRight(m_pRoot->GetRight()->GetRight());
+			//}
+			//else {
+			//	m_pRoot->SetRight(nullptr);
+			//}
+			//
+			//if (current->HasRight() && parent != nullptr) {
+			//	parent->SetRight(current->GetRight());
+			//}
+			//else if(parent != nullptr) {
+			//	parent->SetRight(nullptr);
+			//}
+		}
+		else if(current->HasLeft()){
+			cout << "is going right" << std::endl;
+			current = current->GetLeft();
+			TraverseRight(current, parent);
+			m_pRoot->SetData(current->GetData());
+			if (current->HasLeft() && parent != nullptr) {
+				parent->SetLeft(current->GetLeft());
+			}
+			else if (parent != nullptr) {
+				parent->SetLeft(nullptr);
+			}
+		}
+		else {
+			cout << "is going neither" << std::endl;
+			m_pRoot = nullptr;
+		}
 	}
 
+	//cout << m_pRoot->GetData() << " <-Root data" << std::endl;
+	//cout << m_pRoot->HasRight() << " <-HasRight? || " << m_pRoot->HasLeft() << " <-HasLeft?" << std::endl;
+//
+
+Jeff's Method:
+pass in a pointer reference node(PRnode)
+save its right and left to a pointer, this directly points to those values rather than just the PRnode
+use 'delete' to delete that current node, then replace its values
+
+*/
+
+void BinaryTree::Remove(TreeNode* &nodeToRemove) {
+	TreeNode* leftSave = nodeToRemove->HasLeft() ? nodeToRemove->GetLeft() : nullptr;
+	TreeNode* rightSave = nodeToRemove->HasRight() ? nodeToRemove->GetRight() : nullptr;
 
 
-	
+
 }
 
 void BinaryTree::PrintOrdered()

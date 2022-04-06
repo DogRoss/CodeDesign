@@ -20,8 +20,12 @@ public:
 
 	bool IsEmpty() const;
 	void Insert(int a_nValue);
-	void Remove(int a_nValue);
+	//void Remove(int a_nValue);
+	void Remove(TreeNode*& nodeToRemove);
 	TreeNode* Find(int a_nValue);
+
+	void TraverseRight(TreeNode* &startingPoint, TreeNode* &startingParent);
+	void TraverseLeft(TreeNode* &startingPoint, TreeNode* &startingParent);
 
 	void PrintOrdered();
 	void PrintUnordered();
