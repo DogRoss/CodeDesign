@@ -20,7 +20,7 @@ BinaryTree::~BinaryTree()
 {
 	while(m_pRoot)
 	{
-		Remove(m_pRoot);
+		Remove(m_pRoot->GetData());
 	}
 }
 
@@ -159,6 +159,10 @@ bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& p
 	TreeNode* parent = nullptr;
 	TreeNode* current = m_pRoot;
 
+	if (current == nullptr) {
+		return false;
+	}
+
 	while (true) {
 		
 		if (a_nSearchValue > current->GetData()) { //if going right
@@ -170,7 +174,7 @@ bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& p
 				return false;
 			}
 		}
-		else if (a_nSearchValue > current->GetData()) { //if going left
+		else if (a_nSearchValue < current->GetData()) { //if going left
 			if (current->HasLeft()) {
 				parent = current;
 				current = current->GetLeft();
@@ -189,7 +193,7 @@ bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& p
 	return false;
 }
 
-void BinaryTree::Remove(TreeNode* nodeToDelete) {
+void BinaryTree::Remove(int a_nSearchValue) {
 	/*
 	Save the left and right node of the node to delete with a ptr node
 	create new nodes for iterating (parent and current, as well as currentLeft and currentRight)
@@ -211,33 +215,154 @@ void BinaryTree::Remove(TreeNode* nodeToDelete) {
 
 	*/
 
-	
-	TreeNode* nTDRight = nodeToDelete->GetRight();
-	TreeNode* nTDLeft = nodeToDelete->GetLeft();
+	TreeNode* nodeToDelete;
+	TreeNode* nTDParent;
+
+	if (!FindNode(a_nSearchValue, nodeToDelete, nTDParent)){
+		return;
+	}
+
+	if (nodeToDelete->HasRight()) {
+		TreeNode* nTDRight = nodeToDelete->GetRight();
+	}
+	if (nodeToDelete->HasLeft()) {
+		TreeNode* nTDLeft = nodeToDelete->GetLeft();
+	}
 
 	TreeNode* parent = nullptr;
 	TreeNode* current = nullptr;
 
-	if (FindNode(nodeToDelete->GetData(), current, parent)) { //if the data exists (current set to position of nodeToDelete)
-		/*
-		if (parent != nullptr) {
-			parent->SetRight(nTDLeft);
-			parent->GetRight()->SetRight(nTDRight);
-			if (current->HasRight()) {
-				current->SetRight(nullptr);
+	if (FindNode(a_nSearchValue, current, parent)) { //if the data exists (current set to position of nodeToDelete)
+
+		if (current->GetData() > m_pRoot->GetData()) { //if right of root
+			if (current->HasRight()) { //favor right node from root first
+				parent = current;
+				current = current->GetRight(); //iterate right one
+
+				if (current->HasLeft()) { //we are able to get the left most node from current
+					TraverseLeft(current, parent);
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasRight()) { //if the node we are replacing 
+						parent->SetLeft(current->GetRight());
+					}
+					else {
+						parent->SetLeft(nullptr);
+					}
+
+					delete current;
+				}
+				else { //if the current node doesnt have left nodes
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasRight()) { //if it has a right node
+						nodeToDelete->SetRight(current->GetRight());
+					}
+					else {
+						nodeToDelete->SetRight(nullptr);
+					}
+				}
 			}
-			if (current->HasLeft()) {
-				current->SetLeft(nullptr);
+			else if (current->HasLeft()) { //if right doesnt exist
+				parent = current;
+				current = current->GetLeft(); //iterate left one
+
+				if (current->HasRight()) { //we are able to get the right most node from current
+					TraverseRight(current, parent);
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasLeft()) { //if the node we are replacing 
+						parent->SetRight(current->GetLeft());
+					}
+					else {
+						parent->SetRight(nullptr);
+					}
+					delete current;
+				}
+				else { //if the current node doesnt have right nodes
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasLeft()) { //if it has a left node
+						nodeToDelete->SetLeft(current->GetLeft());
+					}
+					else {
+						nodeToDelete->SetLeft(nullptr);
+					}
+				}
+			}
+			else {
+				if (nodeToDelete->GetData() > nTDParent->GetData()) { //right of parent
+					nTDParent->SetRight(nullptr);
+				}
+				else if (nodeToDelete->GetData() < nTDParent->GetData()) { //left of parent
+					nTDParent->SetLeft(nullptr);
+				}
 			}
 		}
-		*/
+		else if (current->GetData() < m_pRoot->GetData()) { //if left of root
+			if (current->HasLeft()) { //favor right node from root first
+				parent = current;
+				current = current->GetLeft(); //iterate right one
 
+				if (current->HasRight()) { //we are able to get the left most node from current
+					TraverseRight(current, parent);
+					nodeToDelete->SetData(current->GetData());
 
-		if (nodeToDelete->GetData() > m_pRoot->GetData()) { //if right of root
+					if (current->HasLeft()) { //if the node we are replacing 
+						parent->SetRight(current->GetLeft());
+					}
+					else {
+						parent->SetRight(nullptr);
+					}
 
-		}
-		else if (nodeToDelete->GetData() < m_pRoot->GetData()) { //if left of root
+					delete current;
+				}
+				else { //if the current node doesnt have left nodes
+					nodeToDelete->SetData(current->GetData());
 
+					if (current->HasLeft()) { //if it has a right node
+						nodeToDelete->SetLeft(current->GetLeft());
+					}
+					else {
+						nodeToDelete->SetLeft(nullptr);
+					}
+				}
+			}
+			else if (current->HasRight()) { //if right doesnt exist
+				parent = current;
+				current = current->GetRight(); //iterate left one
+
+				if (current->HasLeft()) { //we are able to get the right most node from current
+					TraverseLeft(current, parent);
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasRight()) { //if the node we are replacing 
+						parent->SetLeft(current->GetRight());
+					}
+					else {
+						parent->SetLeft(nullptr);
+					}
+					delete current;
+				}
+				else { //if the current node doesnt have right nodes
+					nodeToDelete->SetData(current->GetData());
+
+					if (current->HasRight()) { //if it has a left node
+						nodeToDelete->SetRight(current->GetRight());
+					}
+					else {
+						nodeToDelete->SetRight(nullptr);
+					}
+				}
+			}
+			else {
+				if (nodeToDelete->GetData() > nTDParent->GetData()) { //right of parent
+					nTDParent->SetLeft(nullptr);
+				}
+				else if (nodeToDelete->GetData() < nTDParent->GetData()) { //left of parent
+					nTDParent->SetRight(nullptr);
+				}
+			}
 		}
 		else { //if it is root
 			if (current->HasRight()) { //favor right node from root first
@@ -249,8 +374,13 @@ void BinaryTree::Remove(TreeNode* nodeToDelete) {
 					m_pRoot->SetData(current->GetData());
 
 					if (current->HasRight()) { //if the node we are replacing 
-						parent->SetRight(current->GetRight());
+						parent->SetLeft(current->GetRight());
 					}
+					else {
+						parent->SetLeft(nullptr);
+					}
+
+					delete current;
 				}
 				else { //if the current node doesnt have left nodes
 					m_pRoot->SetData(current->GetData());
@@ -271,7 +401,13 @@ void BinaryTree::Remove(TreeNode* nodeToDelete) {
 					TraverseRight(current, parent);
 					m_pRoot->SetData(current->GetData());
 
-
+					if (current->HasLeft()) { //if the node we are replacing 
+						parent->SetRight(current->GetLeft());
+					}
+					else {
+						parent->SetRight(nullptr);
+					}
+					delete current;
 				}
 				else { //if the current node doesnt have right nodes
 					m_pRoot->SetData(current->GetData());
@@ -284,7 +420,7 @@ void BinaryTree::Remove(TreeNode* nodeToDelete) {
 					}
 				}
 			}
-			else { //if left doesnt exist
+			else { //if neither dont exist
 				m_pRoot = nullptr;
 			}
 		}

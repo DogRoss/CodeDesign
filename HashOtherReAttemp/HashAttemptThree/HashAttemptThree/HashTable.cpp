@@ -36,10 +36,7 @@ unsigned int HashTable::ht_insert(std::string value) //inserts value into hash t
 		return hash;
 	}
 	else {
-		if (count == size) {
-			std::cout << "Insert Error: Hash Table is full" << std::endl;
-			return NULL;
-		}
+		
 
 		std::cout << "Inserting..." << std::endl;
 		values[index] = value;

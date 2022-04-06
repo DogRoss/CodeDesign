@@ -16,7 +16,7 @@ public:
 
 	bool IsEmpty() const;
 	void Insert(int a_nValue);
-	void Remove(TreeNode* nodeToRemove);
+	void Remove(int a_nSearchValue);
 	TreeNode* Find(int a_nValue);
 	void TraverseRight(TreeNode* &outStarting, TreeNode*& outParent);
 	void TraverseLeft(TreeNode* &outStarting, TreeNode* &outParent);
