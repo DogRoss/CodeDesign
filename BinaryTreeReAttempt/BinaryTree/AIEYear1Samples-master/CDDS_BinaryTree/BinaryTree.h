@@ -18,6 +18,8 @@ public:
 	void Insert(int a_nValue);
 	void Remove(TreeNode* nodeToRemove);
 	TreeNode* Find(int a_nValue);
+	TreeNode* TraverseRight(TreeNode* startingPoint);
+	TreeNode* TraverseLeft(TreeNode* startingPoint);
 
 	void PrintOrdered();
 	void PrintUnordered();
