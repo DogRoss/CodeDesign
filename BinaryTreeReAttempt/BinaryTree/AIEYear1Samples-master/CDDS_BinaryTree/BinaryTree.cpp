@@ -57,7 +57,6 @@ void BinaryTree::Insert(int a_nValue)
 			return;
 		}
 		else if (insertNode->GetData() > m_pRoot->GetData()) { //if right of root
-			current = current->GetRight();
 			while (true) { //iterates through until correct position is reached
 				if (insertNode->GetData() == current->GetData()) {
 					std::cout << "ERROR: number exists in tree, returning..." << std::endl;
@@ -82,7 +81,6 @@ void BinaryTree::Insert(int a_nValue)
 			} 
 		}
 		else { //if to the left
-			current = current->GetLeft();
 			while (true) { //iterates through until correct position is reached
 				if (insertNode->GetData() == current->GetData()) {
 					std::cout << "ERROR: number exists in tree, returning..." << std::endl;
@@ -125,29 +123,69 @@ TreeNode* BinaryTree::Find(int a_nValue)
 	return FindNode(a_nValue, pCurrent, pParent) ? pCurrent: nullptr;
 }
 
-TreeNode* BinaryTree::TraverseRight(TreeNode* startingPoint) { //iterates throught right children of node until end of that node
-	TreeNode* current = startingPoint;
+void BinaryTree::TraverseRight(TreeNode* &outStarting, TreeNode* &outParent) { //iterates throught right children of node until end of that node
+	TreeNode* parent = outParent;
+	TreeNode* current = outStarting;
 	while (current->HasRight()) {
+		parent = current;
 		current = current->GetRight();
 	}
 
-	return current;
+	outStarting = current;
+	outParent = parent;
 }
 
-TreeNode* BinaryTree::TraverseLeft(TreeNode* startingPoint) { //iterates throught left children of node until end of that node
-	TreeNode* current = startingPoint;
+void BinaryTree::TraverseLeft(TreeNode* &outStarting, TreeNode* &outParent) { //iterates throught left children of node until end of that node
+	TreeNode* parent = outParent;
+	TreeNode* current = outStarting;
 	while (current->HasLeft()) {
+		parent = current;
 		current = current->GetLeft();
 	}
 
-	return current;
+	outStarting = current;
+	outParent = parent;
 }
 
-bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent)
+bool BinaryTree::FindNode(int a_nSearchValue, TreeNode*& ppOutNode, TreeNode*& ppOutParent) //finds node of value and returns as outnode and outparent
 {
 	/*
-	
+	create a current node set to root
+	check if value is greater or less than, and iterate based on it
+	each iteration, change the parent to current, and current to current->next(based on value)
+	when the value is found, return true, if not return fals
 	*/
+	
+	TreeNode* parent = nullptr;
+	TreeNode* current = m_pRoot;
+
+	while (true) {
+		
+		if (a_nSearchValue > current->GetData()) { //if going right
+			if (current->HasRight()) {
+				parent = current;
+				current = current->GetRight();
+			}
+			else {
+				return false;
+			}
+		}
+		else if (a_nSearchValue > current->GetData()) { //if going left
+			if (current->HasLeft()) {
+				parent = current;
+				current = current->GetLeft();
+			}
+			else {
+				return false;
+			}
+		}
+		else { //if equal to
+			ppOutParent = parent;
+			ppOutNode = current;
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -171,37 +209,91 @@ void BinaryTree::Remove(TreeNode* nodeToDelete) {
 		if not:
 	if not:
 
-
-
-
-
-
-	else if (insertNode->GetData() > m_pRoot->GetData()) { //if right of root
-			current = current->GetRight(); //iterates right one
-			while (!current->HasLeft() && current->HasRight()) { //checks if there ISNT a left node and IS a right node, as long as the check returns true, iterate right
-				if (current->HasRight()) {
-					current = current->GetRight();
-				}
-
-			} //when a left is found or no more right exists, leave loop
-
-			current = TraverseLeft(current); //traverse all the way to the left
-
-		}
-		else { //if to the left
-			current = current->GetLeft(); //iterate left one
-			while (!current->HasRight() && current->HasLeft()) { //checks if there ISNT a right node and IS a left node, as long as the check returns true, iterate left
-				if (current->HasLeft()) {
-					current = current->GetLeft();
-				}
-			} //when right is found or no more left exists, leave loop
-
-			current = TraverseRight(current); //traverse all the way to the right
-		}
 	*/
 
+	
 	TreeNode* nTDRight = nodeToDelete->GetRight();
 	TreeNode* nTDLeft = nodeToDelete->GetLeft();
+
+	TreeNode* parent = nullptr;
+	TreeNode* current = nullptr;
+
+	if (FindNode(nodeToDelete->GetData(), current, parent)) { //if the data exists (current set to position of nodeToDelete)
+		/*
+		if (parent != nullptr) {
+			parent->SetRight(nTDLeft);
+			parent->GetRight()->SetRight(nTDRight);
+			if (current->HasRight()) {
+				current->SetRight(nullptr);
+			}
+			if (current->HasLeft()) {
+				current->SetLeft(nullptr);
+			}
+		}
+		*/
+
+
+		if (nodeToDelete->GetData() > m_pRoot->GetData()) { //if right of root
+
+		}
+		else if (nodeToDelete->GetData() < m_pRoot->GetData()) { //if left of root
+
+		}
+		else { //if it is root
+			if (current->HasRight()) { //favor right node from root first
+				parent = current;
+				current = current->GetRight(); //iterate right one
+				
+				if (current->HasLeft()) { //we are able to get the left most node from current
+					TraverseLeft(current, parent);
+					m_pRoot->SetData(current->GetData());
+
+					if (current->HasRight()) { //if the node we are replacing 
+						parent->SetRight(current->GetRight());
+					}
+				}
+				else { //if the current node doesnt have left nodes
+					m_pRoot->SetData(current->GetData());
+
+					if(current->HasRight()){ //if it has a right node
+						m_pRoot->SetRight(current->GetRight());
+					}
+					else {
+						m_pRoot->SetRight(nullptr);
+					}
+				}
+			}
+			else if(current->HasLeft()){ //if right doesnt exist
+				parent = current;
+				current = current->GetLeft(); //iterate left one
+
+				if (current->HasRight()) { //we are able to get the right most node from current
+					TraverseRight(current, parent);
+					m_pRoot->SetData(current->GetData());
+
+
+				}
+				else { //if the current node doesnt have right nodes
+					m_pRoot->SetData(current->GetData());
+
+					if (current->HasLeft()) { //if it has a left node
+						m_pRoot->SetLeft(current->GetLeft());
+					}
+					else {
+						m_pRoot->SetLeft(nullptr);
+					}
+				}
+			}
+			else { //if left doesnt exist
+				m_pRoot = nullptr;
+			}
+		}
+	}
+	else {
+		std::cout << "ERROR: value doesnt exist, returning...";
+		return;
+	}
+
 }
 
 /*
