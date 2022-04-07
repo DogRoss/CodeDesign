@@ -10,7 +10,7 @@
 	//Functions
 
 
-
+	//adds node to end
 	void DoublyLinkedList::AddNode(int value) {
 		Node* node = new Node(value);
 
@@ -27,6 +27,7 @@
 		std::cout << tail->value << " addnode complete" << std::endl;
 	};
 
+	//inserts before head
 	void DoublyLinkedList::InsertAtBegin(int value) {
 		Node* node = new Node(value);
 		head->prev = node;
@@ -35,6 +36,7 @@
 		std::cout << head->value << " insert at begin complete" << std::endl;
 	};
 
+	//inserts after tail
 	void DoublyLinkedList::InsertAtEnd(int value) {
 		Node* node = new Node(value);
 		tail->next = node;
@@ -43,37 +45,34 @@
 		std::cout << tail->value << " insert at end complete" << std::endl;
 	};
 
+	//inserts in list by iterating into list by position amount
 	void DoublyLinkedList::InsertAtPos(int value, int pos) {
-		Node* node = new Node(value);
-
-		if (pos == 0) {
+		if (pos == 0) { //if being inserted at beginning
 			InsertAtBegin(value);
 			return;
 		}
 
+		Node* node = new Node(value);
 		Node* nextPos = head;
 
-		for (int i = pos; i > 0; i--) {
-
+		for (int i = pos; i > 0; i--) { //iterates to just before position
 			if (nextPos->next == NULL) {
 				break;
 			}
 
 			nextPos = nextPos->next;
-
-
 		}
 
-		node->prev = nextPos->prev;
+		node->prev = nextPos->prev; //inserts node in between selected position nodes
 		node->next = nextPos;
 
-		if (nextPos->prev != NULL) {
+		if (nextPos->prev != NULL) { //sets previous node to properly point to this new node
 			nextPos->prev->next = node;
 		}
 		else {
 			head = node;
 		}
-		if (nextPos != NULL) {
+		if (nextPos != NULL) { //sets next node to properly point to this new node
 			nextPos->prev = node;
 		}
 
@@ -82,12 +81,14 @@
 
 	void DoublyLinkedList::DelAtBegin() {
 		head = head->next;
+		delete head->prev;
 		head->prev = NULL;
 		std::cout << " delete at begin complete" << std::endl;
 	};
 
 	void DoublyLinkedList::DelAtEnd() {
 		tail = tail->prev;
+		delete tail->next;
 		tail->next = NULL;
 		std::cout << " delete at end complete" << std::endl;
 	};
@@ -100,11 +101,11 @@
 
 		Node* currentNode = head;
 
-		for (int i = pos - 1; i > 0; i--) {
+		for (int i = pos - 1; i > 0; i--) {//iterates through to position
 
 			if (currentNode->next == NULL) {
 				DelAtEnd();
-				currentNode = NULL;
+				delete currentNode;
 				return;
 			}
 
@@ -112,8 +113,10 @@
 
 		}
 
-		currentNode->next->prev = currentNode->prev;
+		currentNode->next->prev = currentNode->prev; //links currentNodes next and previous together
 		currentNode->prev->next = currentNode->next;
+
+		delete currentNode;
 
 		std::cout << " delete at specific pos done" << std::endl;
 	};
@@ -129,95 +132,36 @@
 		return amount;
 	}
 
-	/*
+	
+	//recursive function to compare and switch nodes using a bubble sort
 	void DoublyLinkedList::CompareAndSwitch(Node* current, Node* next, bool returnOnThisCall) {
-		PrintList("CompareDebug");
-		if (returnOnThisCall) {
+		if (returnOnThisCall) { //checks to see if sortings is done
 			return;
 		}
 
 		if (next) {
-			if (current->value > next->value) {
-
-				if (next != tail) {
-					current->next = next->next;
-					next->next = current;
-					if (next->next != NULL) {
-						next->next->prev = current;
-					}
-				}
-				else {
-					next->next = current;
-					tail = current;
-					tail->next = NULL;
-				}
-				
-				//PrintList("Checkup One");
-				
-
-				if (current->prev) {
-					next->prev = current->prev;
-					current->prev = next;
-				}
-				else {
-					next->prev = NULL;
-					current->prev = next;
-				}
-				
-				//PrintList("Checkup Two");
-
-
-				if (current == head) {
-					head = next;
-					head->prev = NULL;
-				}
-
-				CompareAndSwitch(head, head->next, false);
-			}
-			else {
-				if (current->next == NULL) {
-					CompareAndSwitch(current->next, next->next, true);
-				}
-				else {
-					CompareAndSwitch(current->next, next->next, false);
-
-				}
-
-			}
-		}
-	}
-	*/
-
-	void DoublyLinkedList::CompareAndSwitch(Node* current, Node* next, bool returnOnThisCall) {
-		if (returnOnThisCall) {
-			return;
-		}
-
-		if (next) {
-			if (current->value > next->value) {
-				if (current == head) {
+			if (current->value > next->value) { //if current is greater than next, switch based on certain conditions
+				if (current == head) { //if current is head switch and set next to be head
 					current->next = next->next;
 					current->prev = next;
+
 					next->next->prev = current;
 					next->next = current;
 					
 					next->prev = NULL;
-
 					head = next;
 				}
-				else if (next == tail) {
+				else if (next == tail) {//if current is tail switch and set current to be tail
 					current->next = NULL;
-
 					current->prev->next = next;
 					
 					next->next = current;
 					next->prev = current->prev;
 
 					current->prev = next;
-
 					tail = current;
 				}
-				else {
+				else { //if its a position in the list that isnt head or tail
 					next->next->prev = current;
 					current->prev->next = next;
 					
@@ -228,15 +172,14 @@
 
 					next->next = current;
 				}
-				//PrintList("Checkup Two");
-				CompareAndSwitch(head, head->next, false);
+				CompareAndSwitch(head, head->next, false); //recurses
 			}
 			else {
 				if (current->next == NULL) {
-					CompareAndSwitch(current->next, next->next, true);
+					CompareAndSwitch(current->next, next->next, true); //if iterating is completed, then next call will return null
 				}
 				else {
-					CompareAndSwitch(current->next, next->next, false);
+					CompareAndSwitch(current->next, next->next, false); 
 
 				}
 
