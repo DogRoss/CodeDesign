@@ -14,15 +14,18 @@ public:
 	BinaryTree();
 	~BinaryTree();
 
+	void RightInsert(TreeNode* &iterator, TreeNode* &NodeToInsert);
+	void LeftInsert(TreeNode* &iterator, TreeNode* &NodeToInsert);
+	void RightRemove(TreeNode* &iterator, TreeNode* &iteratorParent, TreeNode* &nodeToDelete, TreeNode* nTDParent);
+	void LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, TreeNode*& nodeToDelete, TreeNode* nTDParent);
+	void RootRemove(TreeNode*& iterator, TreeNode*& iteratorParent, TreeNode*& nodeToDelete, TreeNode* nTDParent);
+
 	bool IsEmpty() const;
 	void Insert(int a_nValue);
 	void Remove(int a_nSearchValue);
 	TreeNode* Find(int a_nValue);
 	void TraverseRight(TreeNode* &outStarting, TreeNode*& outParent);
 	void TraverseLeft(TreeNode* &outStarting, TreeNode* &outParent);
-
-	void PrintOrdered();
-	void PrintUnordered();
 
 	void Draw(TreeNode* selected = nullptr);
 
