@@ -9,7 +9,7 @@ HashTable::HashTable(int tableSize)
 	count = 0;
 }
 
-unsigned int HashTable::myHash(std::string value)
+unsigned int HashTable::myHash(std::string value) //hashes value inputed by getting values from individual characters, adding them, and multiplying by 'a'
 {
 	unsigned int result = 0;
 	for (int i = 0; value[i]; i++) {
@@ -30,14 +30,12 @@ unsigned int HashTable::ht_insert(std::string value) //inserts value into hash t
 
 	std::cout << "hash:" << hash << "||index:" << index << std::endl;
 
-	if (!values[index].empty()) {
+	if (!values[index].empty()) { //key exists, update value at key
 		std::cout << "//key found in table, updating..." << std::endl;
 		values[index] = value;
 		return hash;
 	}
-	else {
-		
-
+	else { //inserts
 		std::cout << "Inserting..." << std::endl;
 		values[index] = value;
 		return hash;

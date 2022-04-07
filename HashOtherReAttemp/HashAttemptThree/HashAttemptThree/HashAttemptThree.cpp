@@ -12,16 +12,15 @@ int main()
     bool shouldClose = false;
     std::cout << "------------------------------------------------------------------------------------------" << std::endl;
     std::cout << "What would you like to do: (i)nsert, (d)elete, (s)earch, (p)rint table, (q)uit application" << std::endl;
-    while (!shouldClose) {
+    while (!shouldClose) { //interactive UI, takes inputed result and executes statement dependant on input
         
         std::string result;
-        result.empty();
         std::cin >> result;
 
         if (result == "i") {
             std::string insertString;
             std::cout << "What text/value would you like to insert?" << std::endl;
-            std::cin.ignore(1000, '\n');
+            std::cin.ignore(1000, '\n'); //getline breaks w/o this
             std::getline(std::cin, insertString);
             ht.ht_insert(insertString);
         }
