@@ -149,11 +149,11 @@ void BinaryTree::RightRemove(TreeNode*& iterator, TreeNode*& iteratorParent, Tre
 //removes node and replaces with closest value to the left
 void BinaryTree::LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, TreeNode*& nodeToDelete, TreeNode* nTDParent)
 {
-	if (iterator->HasLeft()) { //favor right node from root first
+	if (iterator->HasLeft()) { //favor left node from NTD first
 		iteratorParent = iterator;
-		iterator = iterator->GetLeft(); //iterate right one
+		iterator = iterator->GetLeft(); //iterate left by one
 
-		if (iterator->HasRight()) { //we are able to get the left most node from current
+		if (iterator->HasRight()) { //we are able to get the right most node from current
 			TraverseRight(iterator, iteratorParent);
 			nodeToDelete->SetData(iterator->GetData());
 
@@ -166,10 +166,10 @@ void BinaryTree::LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, Tree
 
 			delete iterator;
 		}
-		else { //if the current node doesnt have left nodes
+		else { //if the current node doesnt have right nodes
 			nodeToDelete->SetData(iterator->GetData());
 
-			if (iterator->HasLeft()) { //if it has a right node
+			if (iterator->HasLeft()) { //if it has a left node
 				nodeToDelete->SetLeft(iterator->GetLeft());
 			}
 			else {
@@ -179,11 +179,11 @@ void BinaryTree::LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, Tree
 	}
 
 
-	else if (iterator->HasRight()) { //if right doesnt exist
+	else if (iterator->HasRight()) { //if left doesnt exist
 		iteratorParent = iterator;
-		iterator = iterator->GetRight(); //iterate left one
+		iterator = iterator->GetRight(); //iterate right one
 
-		if (iterator->HasLeft()) { //we are able to get the right most node from current
+		if (iterator->HasLeft()) { //we are able to get the left most node from current
 			TraverseLeft(iterator, iteratorParent);
 			nodeToDelete->SetData(iterator->GetData());
 
@@ -195,10 +195,10 @@ void BinaryTree::LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, Tree
 			}
 			delete iterator;
 		}
-		else { //if the current node doesnt have right nodes
+		else { //if the current node doesnt have left nodes
 			nodeToDelete->SetData(iterator->GetData());
 
-			if (iterator->HasRight()) { //if it has a left node
+			if (iterator->HasRight()) { //if it has a right node
 				nodeToDelete->SetRight(iterator->GetRight());
 			}
 			else {
@@ -208,10 +208,10 @@ void BinaryTree::LeftRemove(TreeNode*& iterator, TreeNode*& iteratorParent, Tree
 	}
 	else {
 		if (nodeToDelete->GetData() > nTDParent->GetData()) { //right of parent
-			nTDParent->SetLeft(nullptr);
+			nTDParent->SetRight(nullptr);
 		}
 		else if (nodeToDelete->GetData() < nTDParent->GetData()) { //left of parent
-			nTDParent->SetRight(nullptr);
+			nTDParent->SetLeft(nullptr);
 		}
 	}
 }
